@@ -518,3 +518,23 @@
   .lumen-btn-primary, .lumen-btn-primary-lg, .lumen-btn-ghost-lg,
   .lumen-card, .lumen-asset-card { transition: none; }
 }
+
+/* ── Leaflet map marker (AssetMap.jsx) — LUMEN green pin with pulse ── */
+.lumen-map-pin { background: transparent; border: 0; }
+.lumen-map-pin__dot {
+  position: relative; display: block; width: 20px; height: 20px; margin: 4px;
+  border-radius: 50%; background: #2E5D4F;
+  border: 3px solid #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,.35);
+}
+.lumen-map-pin__pulse {
+  position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid rgba(46,93,79,.5); animation: lumenPinPulse 2s ease-out infinite;
+}
+@keyframes lumenPinPulse {
+  0%   { transform: scale(.7); opacity: .9; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+.leaflet-container { font-family: inherit; border-radius: 1rem; }
+.leaflet-popup-content-wrapper { border-radius: .75rem; box-shadow: 0 8px 28px rgba(0,0,0,.14); }
+.leaflet-popup-content { margin: .7rem .9rem; font-size: 13px; line-height: 1.45; }
+.leaflet-bar a { color: #2E5D4F; }

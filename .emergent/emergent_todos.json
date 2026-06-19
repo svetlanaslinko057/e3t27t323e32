@@ -1,26 +1,30 @@
 [
   {
-    "content": "Study existing FAQ implementations + reference design",
+    "content": "Backend: aggregate real crypto/fiat raised + rebuild _capital_stack (no debt)",
     "status": "completed"
   },
   {
-    "content": "Build reusable editorial FaqList component (slash numbering, + toggle, gold lines) in LUMEN palette",
+    "content": "Seed: 9 new assets + capital_stack + crypto/fiat split + geo + pool contributions",
     "status": "completed"
   },
   {
-    "content": "Add .lpub-faq styles to public.css",
+    "content": "Frontend /assets: search suggestions + validation + sorting + 'Показати більше' pagination",
     "status": "completed"
   },
   {
-    "content": "Wire FaqList into /contacts (replace shadcn Accordion)",
+    "content": "Frontend: Leaflet+OSM interactive map (AssetMap.jsx) + marker",
     "status": "completed"
   },
   {
-    "content": "Test FAQ redesign end-to-end via testing agent",
+    "content": "Frontend: 'Прокласти маршрут' geolocation -> Google Maps directions",
     "status": "completed"
   },
   {
-    "content": "Fix any issues + finalize",
+    "content": "Frontend: CapitalStack crypto/fiat highlight polish",
     "status": "completed"
+  },
+  {
+    "content": "Test backend + frontend via testing agent, fix issues",
+    "status": "in_progress"
   }
 ]

@@ -103,13 +103,114 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Deploy the existing LUMEN RWA platform (cloned from GitHub) and continue prior work.
-  Latest task: the public "Калькулятор" (/calculator) page showed only a BASIC version
-  (amount + term sliders + preset yield). There was a more advanced GLOBAL calculator
-  hidden (dead code) in LandingPage.js — it lets the user SELECT a real asset/object,
-  shows pool share %, rental cash flow, appreciation, gross/net profit, tax, effective
-  IRR, and 3 scenarios. Requirement: delete the basic version and place ONLY the full
-  advanced functional calculator on the /calculator page (in blocks).
+  LUMEN RWA platform. Enhance the public Assets experience:
+  (A) /assets list: add search SUGGESTIONS + validation, comprehensive SORTING (yield, price/min_ticket,
+      progress, newest), and PAGINATION "show 6 by default, then 'Показати більше' (+6)". Added 9 demo
+      assets (15 total) so pagination is meaningful.
+  (B) Asset detail Capital Stack ("Структура капіталу угоди"): show REAL crypto vs fiat raised computed
+      from confirmed pool contributions (lumen_pool_contributions, grouped by gateway). Structure =
+      Кошти інвесторів·криптою + ·фіатом + Резервний фонд + Власні кошти. Removed debt/credit.
+  (C) Asset detail Location: replaced broken static map image with a FREE no-key interactive Leaflet+OSM
+      (CARTO Positron tiles) map with a green marker, plus "Прокласти маршрут" button that detects user
+      geolocation and opens Google Maps directions (origin→object).
+
+backend:
+  - task: "Real crypto/fiat capital stack from pool contributions"
+    implemented: true
+    working: true
+    file: "backend/lumen_asset_intelligence.py, backend/seed_assets_expansion.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: true
+          agent: "main"
+          comment: |
+            Added crypto_fiat_split() aggregating confirmed lumen_pool_contributions by gateway.
+            Rebuilt _capital_stack to output investors_crypto/investors_fiat/reserve/platform layers
+            (no debt) + crypto_raised/fiat_raised/crypto_percent/fiat_percent. Wired into
+            GET /api/assets/{id}/capital-stack and /intelligence. Seeded 9 new assets + capital_stack
+            + raised_crypto/raised_fiat + geo on all 15 assets + 140 confirmed contributions (crypto+fiat).
+            Verified via curl: asset-podilskyi returns crypto 900000 (40%) / fiat 1350000 (60%), reserve,
+            platform; no debt. /api/assets returns 15 (12 open).
+
+frontend:
+  - task: "/assets list — search suggestions, validation, sorting, Показати більше pagination"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/public/PublicAssetsPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: |
+            Search input shows suggestions dropdown (asset titles + locations) once >=2 chars; <2 chars
+            shows a hint; no-match shows message; clear (x) button; keyboard nav. Sort <select> with 7
+            options (featured/yield asc-desc/ticket asc-desc/progress/newest). Pagination: 6 cards then
+            "Показати більше" (+6) with "Показано N з M". Result count + reset filters. data-testids:
+            assets-search-input, assets-search-suggestions, assets-suggestion-{i}, assets-search-hint,
+            assets-search-clear, assets-sort-select, assets-grid, assets-show-more, assets-shown-count,
+            assets-result-count.
+
+  - task: "Asset detail — interactive Leaflet map + Прокласти маршрут + crypto/fiat capital stack"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/public/AssetMap.jsx, frontend/src/pages/PublicAssetDetail.js, frontend/src/components/lumen/AssetIntelligence.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: |
+            Replaced broken static map img with AssetMap.jsx (Leaflet + CARTO Positron tiles, free no-key),
+            green pulsing marker + popup. "Прокласти маршрут" [asset-map-route] uses navigator.geolocation
+            then opens Google Maps directions (origin=user,destination=object) in new tab; falls back to
+            destination-only if denied. "Відкрити в Google Maps" [asset-map-open]. CapitalStack now shows
+            crypto/fiat highlight tiles [capital-crypto]/[capital-fiat] + note. data-testids: asset-map,
+            asset-map-route, asset-map-open, capital-stack, capital-stack-rails.
+
+metadata:
+  created_by: "main_agent"
+  version: "1.3"
+  test_sequence: 3
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Real crypto/fiat capital stack from pool contributions"
+    - "/assets list — search suggestions, validation, sorting, Показати більше pagination"
+    - "Asset detail — interactive Leaflet map + Прокласти маршрут + crypto/fiat capital stack"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+    - agent: "main"
+      message: |
+        Test BACKEND + FRONTEND for the public Assets upgrade. No login needed (public pages).
+
+        BACKEND (curl):
+        1. GET /api/assets?limit=60 → total 15, ~12 open.
+        2. GET /api/assets/asset-podilskyi/capital-stack → crypto_raised>0, fiat_raised>0, layers contain
+           investors_crypto + investors_fiat + reserve + platform, NO layer with key "debt".
+        3. GET /api/assets/asset-kharkiv-bc/intelligence → capital_stack has crypto/fiat split.
+
+        FRONTEND (https://admin-logic-test-1.preview.emergentagent.com ; pages are lazy-loaded, a brief
+        'Завантаження…' spinner may flash — wait for content):
+        4. /assets: type >=2 chars in [data-testid=assets-search-input] → suggestions dropdown
+           [assets-search-suggestions] appears; typing 1 char shows hint [assets-search-hint]; clicking a
+           suggestion [assets-suggestion-0] fills the search; clear button [assets-search-clear] resets.
+        5. /assets: change [assets-sort-select] (e.g. yield_desc) → grid order changes.
+        6. /assets: by default 6 cards in [assets-grid]; [assets-show-more] visible; clicking it loads +6;
+           [assets-shown-count] updates.
+        7. /objects/asset-podilskyi: capital stack [capital-stack] shows crypto tile [capital-crypto] and
+           fiat tile [capital-fiat]; Location block has an interactive map [asset-map] and a
+           "Прокласти маршрут" button [asset-map-route] (do NOT need to grant geolocation — just confirm
+           the button exists and is clickable) + "Відкрити в Google Maps" [asset-map-open].
+        Do NOT test drag-and-drop, camera, or voice.
 
 frontend:
   - task: "Advanced asset-based yield calculator on /calculator page"

@@ -193,49 +193,99 @@ def _compute_scenarios(a: dict) -> dict:
 # B3 — Capital Stack
 # ──────────────────────────────────────────────────────────────────────────────
 
-_STACK_LABELS = {
-    "asset_value": "Вартість об'єкта",
-    "debt": "Банківський кредит",
-    "platform": "Кошти платформи",
-    "investors": "Кошти інвесторів",
-    "reserve": "Резервний фонд",
-}
-_STACK_ORDER = ["asset_value", "debt", "platform", "investors", "reserve"]
 _STACK_TONE = {
-    "asset_value": "#1f2937", "debt": "#C99B3D", "platform": "#6b7280",
-    "investors": "#2E5D4F", "reserve": "#0ea5e9",
+    "asset_value": "#1f2937",
+    "investors_crypto": "#2E5D4F",   # forest green  — raised via crypto/internal balance
+    "investors_fiat": "#C9A961",     # gold          — raised via fiat (bank)
+    "reserve": "#0ea5e9",            # blue          — reserve fund
+    "platform": "#6b7280",           # gray          — own / platform funds
+}
+_STACK_LAYER_LABELS = {
+    "investors_crypto": "Кошти інвесторів · криптою",
+    "investors_fiat": "Кошти інвесторів · фіатом",
+    "reserve": "Резервний фонд",
+    "platform": "Власні кошти",
 }
 
+# Confirmed pool contributions are the source of truth for the crypto/fiat split.
+C_POOL_CONTRIB = "lumen_pool_contributions"
 
-def _capital_stack(a: dict) -> dict:
+
+async def crypto_fiat_split(asset_id: str, *, fallback_raised: float = 0.0,
+                            asset: Optional[dict] = None) -> dict:
+    """Real raised split by funding rail.
+
+    Source of truth = confirmed `lumen_pool_contributions` for this asset,
+    grouped by `gateway` ("crypto" | "fiat"). "crypto" covers on-chain USDT and
+    internal-balance reinvestment (internal crypto logic). Falls back to authored
+    per-asset fields, then to a proportional default of the raised amount.
+    """
+    crypto = 0.0
+    fiat = 0.0
+    try:
+        cur = db[C_POOL_CONTRIB].find({"asset_id": asset_id, "status": "confirmed"})
+        async for c in cur:
+            amt = float(c.get("amount_usd") or c.get("amount") or 0)
+            gw = str(c.get("gateway") or "fiat").lower()
+            if gw == "crypto":
+                crypto += amt
+            else:
+                fiat += amt
+    except Exception:
+        crypto = fiat = 0.0
+
+    total = crypto + fiat
+    if total <= 0 and asset is not None:
+        rc = float(asset.get("raised_crypto") or 0)
+        rf = float(asset.get("raised_fiat") or 0)
+        crypto, fiat, total = rc, rf, rc + rf
+    if total <= 0 and fallback_raised > 0:
+        crypto = round(fallback_raised * 0.30)
+        fiat = fallback_raised - crypto
+        total = crypto + fiat
+    return {"crypto": round(crypto), "fiat": round(fiat), "total": round(total)}
+
+
+def _capital_stack(a: dict, split: Optional[dict] = None) -> dict:
+    """Capital structure. Investor capital is split into real crypto vs fiat
+    rails (from `split`); plus reserve fund and own/platform funds. No debt."""
     target, raised, _ = _funding(a)
     raw = a.get("capital_stack") or {}
 
-    # Authored stack wins. Otherwise derive a sensible minimal stack from the
-    # equity raise so the card is never empty.
-    if raw and any(float(raw.get(k) or 0) > 0 for k in ("debt", "platform", "investors", "reserve")):
-        investors = float(raw.get("investors") or target)
-        debt = float(raw.get("debt") or 0)
-        platform = float(raw.get("platform") or 0)
-        reserve = float(raw.get("reserve") or 0)
-        asset_value = float(raw.get("asset_value") or (investors + debt + platform + reserve))
-        authored = True
-    else:
-        investors = target
-        debt = 0.0
-        platform = 0.0
-        reserve = round(target * 0.05)
-        asset_value = investors + reserve
-        authored = False
+    investors_authored = float(raw.get("investors") or 0)
+    reserve = float(raw.get("reserve") or 0)
+    platform = float(raw.get("platform") or raw.get("own") or 0)
 
-    total = investors + debt + platform + reserve
+    if split and float(split.get("total") or 0) > 0:
+        investors = float(split["total"])
+        inv_crypto = float(split.get("crypto") or 0)
+        inv_fiat = float(split.get("fiat") or 0)
+    else:
+        investors = investors_authored or raised or target
+        inv_crypto = float(a.get("raised_crypto") or 0)
+        inv_fiat = float(a.get("raised_fiat") or 0)
+        if (inv_crypto + inv_fiat) <= 0:
+            inv_crypto, inv_fiat = 0.0, investors
+
+    if reserve <= 0:
+        reserve = round((investors_authored or investors) * 0.05)
+
+    asset_value = float(raw.get("asset_value") or 0) or (investors + reserve + platform)
+    total = investors + reserve + platform
+    authored = bool(raw)
+
     layers = []
-    for key, val in (("debt", debt), ("platform", platform), ("investors", investors), ("reserve", reserve)):
+    for key, val in (
+        ("investors_crypto", inv_crypto),
+        ("investors_fiat", inv_fiat),
+        ("reserve", reserve),
+        ("platform", platform),
+    ):
         if val <= 0:
             continue
         layers.append({
             "key": key,
-            "label": _STACK_LABELS[key],
+            "label": _STACK_LAYER_LABELS[key],
             "amount": round(val),
             "percent": round((val / total) * 100, 1) if total > 0 else 0,
             "color": _STACK_TONE[key],
@@ -246,6 +296,10 @@ def _capital_stack(a: dict) -> dict:
         "asset_value": round(asset_value),
         "total_capital": round(total),
         "investor_share_percent": round((investors / total) * 100, 1) if total > 0 else 0,
+        "crypto_raised": round(inv_crypto),
+        "fiat_raised": round(inv_fiat),
+        "crypto_percent": round((inv_crypto / investors) * 100, 1) if investors > 0 else 0,
+        "fiat_percent": round((inv_fiat / investors) * 100, 1) if investors > 0 else 0,
         "layers": layers,
     }
 
@@ -689,7 +743,9 @@ async def get_scenarios(asset_id: str):
 @router.get("/assets/{asset_id}/capital-stack")
 async def get_capital_stack(asset_id: str):
     a = await _asset_or_404(asset_id)
-    return _capital_stack(a)
+    _, raised, _ = _funding(a)
+    split = await crypto_fiat_split(asset_id, fallback_raised=raised, asset=a)
+    return _capital_stack(a, split)
 
 
 @router.get("/assets/{asset_id}/metrics")
@@ -733,6 +789,8 @@ async def get_intelligence(asset_id: str):
     thesis = a.get("thesis") or {}
     has_thesis = any((thesis.get(k) or "").strip() for k in ("opportunity", "market", "execution", "exit"))
     conviction = _conviction(a, facts)
+    _, raised, _ = _funding(a)
+    split = await crypto_fiat_split(asset_id, fallback_raised=raised, asset=a)
     return {
         "asset_id": asset_id,
         "snapshot": _snapshot(a, facts, conviction),
@@ -746,7 +804,7 @@ async def get_intelligence(asset_id: str):
             "exit": thesis.get("exit") or "",
             "has_content": has_thesis,
         },
-        "capital_stack": _capital_stack(a),
+        "capital_stack": _capital_stack(a, split),
         "scenarios": _compute_scenarios(a),
         "metrics": metrics,
         "conviction": conviction,

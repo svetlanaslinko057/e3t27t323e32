@@ -505,6 +505,24 @@ export function CapitalStack({ data }) {
         <span className="text-muted-foreground">Частка інвесторів у капіталі</span>
         <span className="font-bold text-[#2E5D4F]">{data.investor_share_percent}%</span>
       </div>
+
+      {(data.crypto_raised > 0 || data.fiat_raised > 0) && (
+        <div className="mt-4 grid grid-cols-2 gap-3" data-testid="capital-stack-rails">
+          <div className="rounded-xl border border-[#2E5D4F]/25 bg-[#2E5D4F]/[0.05] p-3">
+            <p className="text-[11px] uppercase tracking-wide text-[#2E5D4F]">Зібрано криптою</p>
+            <p className="mt-1 font-mono text-lg font-bold text-foreground" data-testid="capital-crypto">{formatUAH(data.crypto_raised)}</p>
+            <p className="text-xs text-muted-foreground">{data.crypto_percent}% від коштів інвесторів</p>
+          </div>
+          <div className="rounded-xl border border-[#C9A961]/40 bg-[#C9A961]/[0.08] p-3">
+            <p className="text-[11px] uppercase tracking-wide text-[#9c7d33]">Зібрано фіатом</p>
+            <p className="mt-1 font-mono text-lg font-bold text-foreground" data-testid="capital-fiat">{formatUAH(data.fiat_raised)}</p>
+            <p className="text-xs text-muted-foreground">{data.fiat_percent}% від коштів інвесторів</p>
+          </div>
+        </div>
+      )}
+      <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+        Розподіл «крипта / фіат» рахується з реальних підтверджених внесків пулу. Криптою враховано також реінвестування з внутрішнього балансу.
+      </p>
     </div>
   );
 }

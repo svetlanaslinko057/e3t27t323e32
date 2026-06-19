@@ -16,6 +16,7 @@ import {
 } from '@/components/lumen/AssetIntelligence';
 import AssetCommunity from '@/components/lumen/AssetCommunity';
 import AssetLiquidity from '@/components/lumen/AssetLiquidity';
+import AssetMap from '@/components/public/AssetMap';
 import { trackEvent } from '@/lib/activityTracker';
 import './LandingPage.css';
 
@@ -228,16 +229,7 @@ const OverviewSection = ({ dto, intel, similar }) => {
               ))}
             </div>
           )}
-          {map.static_map_url && (
-            <a href={map.maps_link || '#'} target="_blank" rel="noreferrer" className="block mt-4 rounded-xl overflow-hidden border border-border">
-              <img src={map.static_map_url} alt="Карта" className="w-full h-[220px] object-cover" />
-            </a>
-          )}
-          {map.maps_link && (
-            <a href={map.maps_link} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-sm text-[#2E5D4F] hover:underline">
-              Відкрити в Google Maps <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          )}
+          <AssetMap lat={map.lat} lng={map.lng} label={hero.title} address={map.address || map.region} />
         </Block>
       )}
       {dto.action && (
