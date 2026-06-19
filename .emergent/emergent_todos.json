@@ -1,42 +1,42 @@
 [
   {
-    "content": "Study repo architecture & deployment requirements",
+    "content": "Phase 1: Shared public shell — PublicLayout, PublicHeader, PublicMenuOverlay (route-based), FooterMega, primitives (PageHero, Reveal, SectionLabel, AssetCard), public.css",
     "status": "completed"
   },
   {
-    "content": "Migrate backend code from repo into /app/backend (preserve .env, MONGO_URL)",
+    "content": "Phase 1: Wire routes in App.js under PublicLayout (/ /how /assets /calculator /contacts /otc /app)",
     "status": "completed"
   },
   {
-    "content": "Migrate frontend code into /app/frontend (preserve REACT_APP_BACKEND_URL)",
+    "content": "Phase 2: Build /how (Принцип роботи та безпека) page",
     "status": "completed"
   },
   {
-    "content": "Migrate mobile, packages, docs, memory into /app",
+    "content": "Phase 2: Build /assets (каталог + раунди, live data) page",
     "status": "completed"
   },
   {
-    "content": "Configure backend .env (DB_NAME, LUMEN flags, EMERGENT_LLM_KEY)",
+    "content": "Phase 2: Build /calculator (Калькулятор дохідності) page",
     "status": "completed"
   },
   {
-    "content": "Install backend deps (filtered requirements)",
+    "content": "Phase 2: Build /contacts (Контакти + FAQ + форма) page",
     "status": "completed"
   },
   {
-    "content": "Install frontend deps (yarn install)",
+    "content": "Phase 2: Refactor LandingPage into selling teasers (remove own header/footer + deep sections)",
     "status": "completed"
   },
   {
-    "content": "Restart services & verify backend boot (healthz/readyz)",
+    "content": "Phase 2: Strip internal headers/footers from /otc, /otc/:id, /app (use shared shell)",
     "status": "completed"
   },
   {
-    "content": "Verify frontend landing page renders",
+    "content": "Phase 3: Add minimal backend endpoints (POST /api/public/contact, /api/public/newsletter/subscribe)",
     "status": "completed"
   },
   {
-    "content": "End-to-end testing of website via testing agent",
-    "status": "completed"
+    "content": "Phase 3: End-to-end testing via testing agent (menu nav, all pages, forms)",
+    "status": "in_progress"
   }
 ]

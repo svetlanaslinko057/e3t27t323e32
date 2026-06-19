@@ -70,32 +70,49 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground lumen-landing">
+    <div className="lumen-landing">
       <SeoHead path="/" emitOrganization />
-      <Header scrolled={scrolled} user={user} />
       <Hero goCabinet={goCabinet} assets={assets} />
       <Ticker />
       <BigStats />
-      <Categories />
-      <HowItWorks />
-      <Web3Layer />
-      <Calculator />
       <FeaturedAssets assets={assets} />
+      <TeaserBlocks />
+      <Categories />
       <Compare />
-      <MarketContext />
-      <ImpactLayer />
-      <Protection />
-      <MobileAppSection />
-      <Team />
       <Testimonials />
       <Press />
-      <FAQ />
-      <RiskDisclosure />
       <FinalCTA goCabinet={goCabinet} />
-      <Footer />
     </div>
   );
 }
+
+/* ── Teaser blocks: route visitors to the dedicated sub-pages (no duplication) ── */
+const TEASERS = [
+  { icon: Layers, title: 'Принцип роботи та безпека', desc: '4 кроки від вибору активу до виплат і виходу. SPV-структура, ескроу та цифровий сертифікат власності.', to: '/how' },
+  { icon: BarChart3, title: 'Калькулятор дохідності', desc: 'Оцініть прогноз щомісячних виплат і річну дохідність під вашу суму та термін.', to: '/calculator' },
+  { icon: Repeat, title: 'Вторинний OTC-ринок', desc: 'Купуйте та продавайте частки інших інвесторів 24/7 — ліквідність без очікування завершення циклу.', to: '/otc' },
+  { icon: Wallet, title: 'Мобільний застосунок', desc: 'Інвестуйте, відстежуйте виплати та торгуйте частками з iOS та Android.', to: '/app' },
+];
+
+const TeaserBlocks = () => (
+  <section className="lpub-section lpub-section--cream">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <SectionEyebrow>Розділи платформи</SectionEyebrow>
+      <h2 className="lumen-h2 mt-4 max-w-2xl">Усе, що потрібно інвестору — на окремих сторінках</h2>
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        {TEASERS.map((t, i) => (
+          <Link key={i} to={t.to} className="lpub-teaser" data-testid={`landing-teaser-${i}`}>
+            <span className="lpub-teaser__icon"><t.icon className="h-5 w-5" /></span>
+            <h3 className="lpub-teaser__title">{t.title}</h3>
+            <p className="lpub-teaser__desc">{t.desc}</p>
+            <span className="lpub-teaser__cta">Детальніше <ArrowUpRight className="h-4 w-4" /></span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
 
 /* ─────────────────────────── HEADER ─────────────────────────── */
 
@@ -409,13 +426,13 @@ const Hero = ({ assets }) => (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-card border border-border"><Link2 className="w-3.5 h-3.5 text-[#2E5D4F]" /> Powered by blockchain</span>
           </div>
           <div className="mt-7 flex flex-wrap items-center gap-3">
-            <a href="#assets" className="lumen-btn-primary-lg group" data-testid="hero-cta-primary">
+            <Link to="/assets" className="lumen-btn-primary-lg group" data-testid="hero-cta-primary">
               Подивитись активи
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-            </a>
-            <a href="#how" className="lumen-btn-ghost-lg" data-testid="hero-cta-secondary">
+            </Link>
+            <Link to="/how" className="lumen-btn-ghost-lg" data-testid="hero-cta-secondary">
               <Building2 className="w-4 h-4" /> Як це працює
-            </a>
+            </Link>
           </div>
           <div className="mt-10 grid grid-cols-3 gap-6 max-w-xl">
             <HeroStat value="22" label="активи в роботі" />
@@ -450,7 +467,7 @@ const HeroAssetCards = ({ assets }) => {
       {list.map((a, i) => (
         <Link
           key={a.id || i}
-          to={a.id && a.id.startsWith('asset-') ? `/objects/${a.id}` : '#assets'}
+          to={a.id && a.id.startsWith('asset-') ? `/objects/${a.id}` : '/assets'}
           className="lumen-hero-card flex items-center gap-4 p-3 transition-all hover:shadow-lg hover:-translate-y-0.5"
           data-testid="hero-asset-card"
         >
@@ -472,9 +489,9 @@ const HeroAssetCards = ({ assets }) => {
         </Link>
       ))}
       <div className="flex gap-2">
-        <a href="#assets" className="lumen-btn-ghost flex-1 justify-center text-sm" data-testid="hero-cards-cta">
+        <Link to="/assets" className="lumen-btn-ghost flex-1 justify-center text-sm" data-testid="hero-cards-cta">
           Усі активи <ArrowRight className="w-4 h-4" />
-        </a>
+        </Link>
         <Link to="/otc" className="lumen-btn-ghost flex-1 justify-center text-sm" data-testid="hero-otc-cta">
           <Repeat className="w-4 h-4" /> OTC ринок
         </Link>
@@ -703,9 +720,9 @@ const Categories = () => {
           {cats.map((c, i) => {
             const Icon = c.Icon;
             return (
-              <a
+              <Link
                 key={c.title}
-                href="#assets"
+                to="/assets"
                 data-testid={`category-card-${i}`}
                 className={`lumen-cat-card group relative flex flex-col overflow-hidden rounded-2xl border bg-background transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl ${c.accent ? 'border-[#C99B3D]/50 ring-1 ring-[#C99B3D]/20' : 'border-border'}`}
               >
@@ -751,7 +768,7 @@ const Categories = () => {
                     </span>
                   </div>
                 </div>
-              </a>
+              </Link>
             );
           })}
           </div>
@@ -1358,7 +1375,7 @@ const FeaturedAssets = ({ assets }) => (
           <SectionEyebrow>відкриті раунди</SectionEyebrow>
           <h2 className="lumen-h2">Об'єкти, які приймають інвесторів зараз</h2>
         </div>
-        <Link to="/auth?mode=register" className="hidden md:inline-flex items-center gap-1 text-sm font-medium text-[#2E5D4F] hover:underline">
+        <Link to="/assets" className="hidden md:inline-flex items-center gap-1 text-sm font-medium text-[#2E5D4F] hover:underline">
           Переглянути всі <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

@@ -2,8 +2,6 @@ import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { lumen, lumenError, formatUSD } from '@/lib/lumenApi';
 import { useLang } from '@/contexts/LanguageContext';
-import { SiteHeader } from '@/pages/LandingPage';
-import PublicSiteFooter from '@/components/PublicSiteFooter';
 import OtcBuyModal from '@/components/otc/OtcBuyModal';
 import {
   Repeat, ShoppingCart, MapPin, Building2, ShieldCheck, TrendingUp, Search,
@@ -54,7 +52,6 @@ export default function OtcMarketPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground" data-testid="otc-market-page">
-      <SiteHeader solid />
 
       {/* hero strip */}
       <section className="border-b border-border bg-gradient-to-br from-[#2E5D4F] to-[#25493e] text-white">
@@ -114,7 +111,6 @@ export default function OtcMarketPage() {
         )}
       </section>
 
-      <PublicSiteFooter />
       {buy && <OtcBuyModal listing={buy} onClose={() => setBuy(null)} />}
     </div>
   );

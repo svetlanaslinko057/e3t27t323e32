@@ -29353,6 +29353,14 @@ try:
     except Exception as _ep:
         import logging as _lg
         _lg.getLogger(__name__).error("lumen_otc_public router failed: %s", _ep)
+
+    # Public website lead-capture (contact form + newsletter).
+    try:
+        import lumen_public_site as _lumen_public_site  # noqa: E402
+        fastapi_app.include_router(_lumen_public_site.router)
+    except Exception as _eps:
+        import logging as _lg
+        _lg.getLogger(__name__).error("lumen_public_site router failed: %s", _eps)
 except Exception as _e:
     import logging as _lg
     _lg.getLogger(__name__).error("lumen_otc router failed: %s", _e)

@@ -40,20 +40,6 @@ export default function MobileAppPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground lumen-landing">
-      {/* top bar */}
-      <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link to="/" className="flex items-center" data-testid="app-page-logo"><Logo height={30} /></Link>
-          <div className="flex items-center gap-2">
-            <Link to="/" className="hidden items-center gap-1.5 text-sm font-medium text-token-muted transition-colors hover:text-foreground sm:inline-flex" data-testid="app-page-back">
-              <ArrowLeft className="h-4 w-4" /> {bi('На сайт', 'Back to site')}
-            </Link>
-            <ThemeToggle />
-            <InstallDialog trigger={<button className="lumen-btn-primary h-9 px-4 text-sm font-medium" data-testid="app-page-install-top"><QrCode className="h-4 w-4" /> {bi('Встановити', 'Install')}</button>} />
-          </div>
-        </div>
-      </header>
-
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(46,93,79,0.06) 0%, rgba(251,247,240,0) 50%)' }} />

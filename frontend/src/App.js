@@ -22,6 +22,11 @@ import EvaCompanion from "@/components/EvaCompanion";
 import ActivityTrackerMount from "@/components/ActivityTrackerMount";
 
 import LandingPage from "@/pages/LandingPage";
+import PublicLayout from "@/layouts/PublicLayout";
+const PublicHowPage = lazy(() => import("@/pages/public/PublicHowPage"));
+const PublicAssetsPage = lazy(() => import("@/pages/public/PublicAssetsPage"));
+const PublicCalculatorPage = lazy(() => import("@/pages/public/PublicCalculatorPage"));
+const PublicContactsPage = lazy(() => import("@/pages/public/PublicContactsPage"));
 const PublicAssetDetail = lazy(() => import("@/pages/PublicAssetDetail"));
 const LegalIndexPage = lazy(() => import("@/pages/legal/LegalIndexPage"));
 const LegalDocPage = lazy(() => import("@/pages/legal/LegalDocPage"));
@@ -295,8 +300,20 @@ function AppRouter() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/objects/:id" element={<PublicAssetDetail />} />
+        {/* ── Public marketing site (shared shell: header + overlay menu + giant footer) ── */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/how" element={<PublicHowPage />} />
+          <Route path="/assets" element={<PublicAssetsPage />} />
+          <Route path="/calculator" element={<PublicCalculatorPage />} />
+          <Route path="/contacts" element={<PublicContactsPage />} />
+          <Route path="/objects/:id" element={<PublicAssetDetail />} />
+          <Route path="/app" element={<MobileAppPage />} />
+          {/* Public OTC marketplace — standalone pages */}
+          <Route path="/otc" element={<OtcMarketPage />} />
+          <Route path="/otc/:id" element={<OtcLotPage />} />
+        </Route>
+
         <Route path="/legal" element={<LegalIndexPage />} />
         <Route path="/legal/:slug" element={<LegalDocPage />} />
         <Route path="/certificates/verify" element={<CertificateVerifyPage />} />
@@ -308,11 +325,6 @@ function AppRouter() {
         <Route path="/contracts/view/:token" element={<PublicContractView />} />
 
         <Route path="/auth" element={<UnifiedAuthPage />} />
-        <Route path="/app" element={<MobileAppPage />} />
-
-        {/* Public OTC marketplace — separate standalone pages (not a landing scroll) */}
-        <Route path="/otc" element={<OtcMarketPage />} />
-        <Route path="/otc/:id" element={<OtcLotPage />} />
 
         <Route path="/mobile" element={<Navigate to="/app" replace />} />
         <Route path="/login" element={<Navigate to="/auth" replace />} />

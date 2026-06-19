@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { lumen, lumenError, formatUSD } from '@/lib/lumenApi';
 import { useLang } from '@/contexts/LanguageContext';
-import { SiteHeader } from '@/pages/LandingPage';
-import PublicSiteFooter from '@/components/PublicSiteFooter';
 import OtcBuyModal from '@/components/otc/OtcBuyModal';
 import {
   ArrowLeft, MapPin, Building2, ShoppingCart, ShieldCheck, TrendingUp, Coins,
@@ -36,7 +34,6 @@ export default function OtcLotPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground" data-testid="otc-lot-page">
-      <SiteHeader solid />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8">
         <Link to="/otc" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6" data-testid="otc-lot-back">
           <ArrowLeft className="w-4 h-4" /> {bi('До OTC ринку', 'Back to OTC market')}
@@ -52,7 +49,6 @@ export default function OtcLotPage() {
           <LotDetail listing={listing} bi={bi} onBuy={() => setBuy(true)} />
         )}
       </div>
-      <PublicSiteFooter />
       {buy && listing && <OtcBuyModal listing={listing} onClose={() => setBuy(false)} />}
     </div>
   );
