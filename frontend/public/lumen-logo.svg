@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 56" fill="none" role="img" aria-label="Lumen">
+  <defs>
+    <linearGradient id="lumen-sun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F2DDAA"/>
+      <stop offset="0.55" stop-color="#D4B675"/>
+      <stop offset="1" stop-color="#A98A45"/>
+    </linearGradient>
+    <linearGradient id="lumen-ray" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#D4B675" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#D4B675" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#D4B675" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(4,4)">
+    <!-- horizon line -->
+    <line x1="2" y1="36" x2="46" y2="36" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+    <!-- rising sun (half disk) -->
+    <path d="M 8 36 A 16 16 0 0 1 40 36 Z" fill="url(#lumen-sun)"/>
+    <!-- inner glow line for depth -->
+    <path d="M 12 36 A 12 12 0 0 1 36 36" stroke="#FFF6E2" stroke-width="0.8" fill="none" opacity="0.55"/>
+    <!-- subtle rays -->
+    <line x1="24" y1="6"  x2="24" y2="14" stroke="url(#lumen-ray)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="6"  y1="22" x2="12" y2="26" stroke="url(#lumen-ray)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="42" y1="22" x2="36" y2="26" stroke="url(#lumen-ray)" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <text x="62" y="36" font-family="'Space Grotesk','Inter',system-ui,sans-serif" font-weight="600" font-size="28" letter-spacing="0.3" fill="currentColor">Lumen</text>
+</svg>

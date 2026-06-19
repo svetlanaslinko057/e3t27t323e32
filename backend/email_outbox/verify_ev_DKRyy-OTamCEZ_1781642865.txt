@@ -1,0 +1,24 @@
+To: spep_probe_b60b9092ab@audit-probe.example
+From: no-reply@lumen.platform
+Subject: [LUMEN] Підтвердіть email / Confirm email
+
+Привіт, Stanislav Sanctiontest Blockov!
+
+Щоб завершити реєстрацію в LUMEN, підтвердіть свою електронну пошту, перейшовши за посиланням нижче (діє 24 години):
+
+/verify-email?token=ev_DKRyy-OTamCEZKKOQ7-I8--8QRnyr-8-tlxd0qosUME
+
+Якщо ви не реєструвалися — просто проігноруйте цей лист.
+
+— LUMEN Team
+
+---
+Hi, Stanislav Sanctiontest Blockov!
+
+Click the link below within 24 hours to confirm your email and finish your LUMEN registration:
+
+/verify-email?token=ev_DKRyy-OTamCEZKKOQ7-I8--8QRnyr-8-tlxd0qosUME
+
+If you didn't sign up, ignore this email.
+
+— LUMEN Team

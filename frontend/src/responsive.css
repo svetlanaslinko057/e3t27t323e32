@@ -1,0 +1,294 @@
+/* ===========================================================================
+   RESPONSIVE LAYER — Fluid web-adaptive (tablet ≥ 768px → 8K/50" displays)
+   ---------------------------------------------------------------------------
+   Loaded AFTER Tailwind utilities so its rules win specificity ties.
+   Imported from /app/web/src/index.css (end of file).
+
+   Scope:
+     • Adaptive for browsers: Chrome / Firefox / Safari (incl. macOS),
+       Edge, Android Chromium, iPad Safari, Samsung Internet, etc.
+     • NOT in scope: phone-form-factor (<768px) — owned by mobile layer.
+
+   Strategy:
+     1. Fluid root font-size via clamp() — every rem-based size auto-scales
+        from tablet through 8K with NO per-page edits.
+     2. Custom screens 3xl/4xl/5xl already added in tailwind.config.js;
+        this file adds CSS-level uplift for screens that don't get
+        Tailwind class breakpoints (legacy pages).
+     3. Safari/iOS hard fixes:
+          - 100vh → 100dvh fallback chain
+          - -webkit-text-size-adjust: 100% (prevents iOS auto-zoom)
+          - safe-area-inset padding (notch)
+          - sticky position parent overflow lock
+          - font-smoothing
+     4. Existing pages cap content at `max-w-7xl` (1280px) which looks tiny
+        on 27"+. We uplift it via a CSS override that boosts the cap to a
+        fluid `min(1920px, 96vw)` without per-page changes.
+     5. Sidebar widths in 4 layouts are still `w-[240px]` — we let them
+        breathe up on big screens via the `.app-sidebar` class added to
+        layouts (see layouts/*.js).
+   ===========================================================================*/
+
+
+/* ---------------------------------------------------------------------------
+   1. ROOT — fixed font-size to preserve original visual hierarchy.
+   ---------------------------------------------------------------------------
+   IMPORTANT: We deliberately keep html font-size at a FIXED 16px across all
+   viewports. Earlier this used a fluid clamp() which scaled root up to 20px
+   on >=1920 displays, inflating EVERY rem-based size (every Tailwind text-*,
+   p-*, gap-*, h-*) by ~25%. That broke the original visual hierarchy of all
+   pages designed against the 16px baseline.
+
+   Fluid scaling is now scoped ONLY to specific HEADING utilities below
+   (.text-display, .text-heading, .text-h1/h2/h3, .stat-value) — they're the
+   intentional "fluid" elements. Body text, controls, spacing all stay at
+   designer-intended sizes.
+   --------------------------------------------------------------------------- */
+html {
+  font-size: 16px;
+
+  /* iOS Safari: stop the OS shrinking text in landscape */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  /* Smooth fonts across all platforms */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Below 768px we don't drive the scale here — mobile layer handles it. */
+@media (max-width: 767.98px) {
+  html { font-size: 15px; }
+}
+
+
+/* ---------------------------------------------------------------------------
+   2. VIEWPORT HEIGHT — Safari/iOS dvh fix
+   ---------------------------------------------------------------------------
+   `100vh` on iOS Safari includes the URL bar zone — sticky sidebars get
+   clipped or scroll-jumped. `dvh` (dynamic viewport height) is the modern
+   answer. We patch the most common offenders globally.
+   --------------------------------------------------------------------------- */
+
+/* Tailwind utility class `h-screen` compiles to `height: 100vh`.
+   Overriding the class directly (after Tailwind) gives every page the fix. */
+.h-screen {
+  height: 100vh;             /* fallback for older browsers */
+  height: 100dvh;            /* modern: shrinks/grows with URL bar */
+}
+.min-h-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.max-h-screen {
+  max-height: 100vh;
+  max-height: 100dvh;
+}
+
+/* The 4 layout shells (`.flex.min-h-screen.bg-app …`) get an extra body
+   safety net so iOS rubber-band doesn't expose blank space. */
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+
+/* ---------------------------------------------------------------------------
+   3. SAFE-AREA PADDING (iOS notch, Android nav, foldable hinges)
+   ---------------------------------------------------------------------------
+   We only push the OUTER frame, not internal cards. */
+@supports (padding: max(0px)) {
+  .app-safe-top    { padding-top:    max(env(safe-area-inset-top), 0px); }
+  .app-safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 0px); }
+  .app-safe-left   { padding-left:   max(env(safe-area-inset-left), 0px); }
+  .app-safe-right  { padding-right:  max(env(safe-area-inset-right), 0px); }
+}
+
+
+/* ---------------------------------------------------------------------------
+   4. CONTAINER UPLIFT — promote max-w-7xl → fluid min(1920px, 96vw)
+   ---------------------------------------------------------------------------
+   90% of pages cap content at `max-w-7xl` (1280px). On a 27" or 4K display
+   that produces a narrow column in the middle. We auto-uplift it via a CSS
+   override targeting the exact Tailwind class — no page edits needed.
+
+   The cap grows AFTER 1280px viewport (so existing layouts don't shift on
+   laptops). On really huge screens (≥ 4K) we still soft-cap at 2200px so
+   content doesn't sprawl unreadably wide. --------------------------------- */
+@media (min-width: 1280px) {
+  .max-w-7xl  { max-width: min(1600px, 94vw) !important; }
+  .max-w-6xl  { max-width: min(1400px, 92vw) !important; }
+}
+@media (min-width: 1920px) {
+  .max-w-7xl  { max-width: 1840px !important; }
+  .max-w-6xl  { max-width: 1560px !important; }
+  .max-w-5xl  { max-width: 1320px !important; }
+  .max-w-4xl  { max-width: 1100px !important; }
+}
+@media (min-width: 2560px) {
+  .max-w-7xl  { max-width: 2200px !important; }
+  .max-w-6xl  { max-width: 1900px !important; }
+  .max-w-5xl  { max-width: 1600px !important; }
+}
+
+
+/* ---------------------------------------------------------------------------
+   5. FLUID SIDEBAR — `w-[240px]` in 4 layouts → fluid clamp 224..304px
+   ---------------------------------------------------------------------------
+   We DON'T touch `w-[240px]` directly (would break narrow screens). Instead
+   the 4 layouts now also carry the `.app-sidebar` class which overrides the
+   inline arbitrary-width Tailwind utility (higher specificity via :where +
+   important on a tighter selector). --------------------------------------- */
+aside.app-sidebar {
+  width: 240px;                              /* fallback */
+  width: clamp(220px, 16vw, 304px);
+  flex-shrink: 0;
+}
+
+/* On really wide screens (4K+) widen the chrome a touch more. */
+@media (min-width: 2560px) {
+  aside.app-sidebar { width: clamp(280px, 14vw, 360px); }
+}
+
+
+/* ---------------------------------------------------------------------------
+   6. CANONICAL MAIN PADDING — Lumen UI Standard (locked 2026-06-14)
+   ---------------------------------------------------------------------------
+   Single source of truth for content insets across ALL cabinets
+   (admin / investor / operator). Pages must NOT add their own horizontal
+   padding — they should let `main.app-main` provide it. Vertical padding can
+   be tuned per page.
+
+       mobile  (<768)  : 16px
+       tablet  (768-1279): 24px
+       desktop (>=1280) : 50px
+
+   We also neutralize the legacy `p-6 / p-8 / p-10 / md:p-6 / md:p-10` inner
+   paddings on the direct page-root wrappers so old pages don't double-pad.
+   Pages that legitimately need full-bleed (no inset) can set the
+   `.lumen-fullbleed` class on their root. --------------------------------- */
+main.app-main {
+  padding-left:  16px;
+  padding-right: 16px;
+  padding-block: clamp(20px, 2vw, 36px);
+  overscroll-behavior: contain;
+}
+@media (min-width: 768px) {
+  main.app-main {
+    padding-left:  24px;
+    padding-right: 24px;
+  }
+}
+@media (min-width: 1280px) {
+  main.app-main {
+    padding-left:  50px;
+    padding-right: 50px;
+  }
+}
+
+/* Neutralize duplicate horizontal padding from common page-root wrappers.
+   We target only the FIRST CHILD div of `main.app-main` so deeper layout
+   structures (cards, inner sections, side rails) keep their padding. */
+main.app-main > div:not(.lumen-fullbleed) {
+  padding-left:  0 !important;
+  padding-right: 0 !important;
+}
+/* Also kill the default `max-w-*` constraints — the .app-main inset already
+   controls page width and we'd rather use full available width up to natural
+   content limits than be clipped on small monitors. Keep mx-auto so any
+   inner max-width still centers if pages set one explicitly. */
+main.app-main > div:not(.lumen-fullbleed):not(.lumen-keep-maxw) {
+  max-width: none !important;
+}
+
+
+/* ---------------------------------------------------------------------------
+   7. FLUID HEADINGS — conservative clamp() so headings get a *gentle* uplift
+   on very wide screens (≥1920) without inflating page hierarchy. Intentionally
+   tame: max values now match the original fixed designs, not 1.25–1.5× them.
+   --------------------------------------------------------------------------- */
+.text-h1       { font-size: clamp(22px, 0.4vw + 18px, 28px); }
+.text-h2       { font-size: clamp(18px, 0.3vw + 14px, 22px); }
+.text-h3       { font-size: clamp(16px, 0.2vw + 13px, 18px); }
+.text-display  { font-size: clamp(2.25rem, 1.5vw + 1.5rem, 3.5rem); }
+.text-heading  { font-size: clamp(1.35rem, 0.8vw + 1rem, 2rem); }
+.stat-value    { font-size: clamp(1.5rem, 0.6vw + 1.2rem, 2rem); }
+
+
+/* ---------------------------------------------------------------------------
+   8. TABLE / WIDE-CONTENT OVERFLOW — tables shouldn't break the page
+   ---------------------------------------------------------------------------
+   On narrow tablet (768-900px) wide admin tables overflow horizontally
+   instead of wrapping into illegible 2-column chaos. */
+.app-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* ---------------------------------------------------------------------------
+   9. SAFARI STICKY FIX — sticky elements inside `overflow: hidden` parents
+   silently break in Safari. We promote the layout shell. */
+[data-testid$="-layout"] {
+  overflow: visible !important;
+}
+
+
+/* ---------------------------------------------------------------------------
+   10. INPUT iOS ZOOM PREVENTION — Safari zooms in if input font-size < 16px.
+   `text-sm` / `text-xs` inputs trip this. Lift the floor to 16px in input
+   contexts only. */
+@media (max-width: 1023.98px) {
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 0.875rem);
+  }
+}
+
+
+/* ---------------------------------------------------------------------------
+   11. SCROLLBAR — Safari/Firefox parity. Already styled in index.css, but
+   re-assert thin so it doesn't bloat on big screens. */
+@media (min-width: 1920px) {
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+}
+
+
+/* ---------------------------------------------------------------------------
+   12. KANBAN / FIXED 300px COLUMNS — let them breathe on big screens. */
+@media (min-width: 1920px) {
+  .kanban-column { width: clamp(300px, 18vw, 380px); }
+}
+
+
+/* ---------------------------------------------------------------------------
+   13. FOCUS RING — keyboard accessibility uplift, theme-aware.
+   Doesn't break existing focus styles, only adds when nothing else handles. */
+:focus-visible {
+  outline: 2px solid var(--token-primary, #2EBF6F);
+  outline-offset: 2px;
+}
+
+
+/* ---------------------------------------------------------------------------
+   14. MOTION SAFETY — prefers-reduced-motion already handled by index.css,
+   but we also disable the new fluid scaling jitter when zooming. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+
+/* ---------------------------------------------------------------------------
+   15. GRID UTILITY — for dashboards that use `grid-cols-N` without breakpoints
+   we add a smart auto-fit override only when the explicit class is absent. */
+.grid-fluid-cards {
+  display: grid;
+  gap: clamp(0.75rem, 1vw, 1.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+}
+
+
+/* ---------------------------------------------------------------------------
+   END responsive layer
+   ---------------------------------------------------------------------------*/

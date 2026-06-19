@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="LUMEN">
+  <defs>
+    <linearGradient id="lbg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#356A59"/>
+      <stop offset="1" stop-color="#16382E"/>
+    </linearGradient>
+    <linearGradient id="lgold" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#F2DDAA"/>
+      <stop offset="0.55" stop-color="#E5C98A"/>
+      <stop offset="1" stop-color="#C9A961"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="512" height="512" rx="116" fill="url(#lbg)"/>
+  <rect x="0" y="0" width="512" height="512" rx="116" fill="none" stroke="#E5C98A" stroke-opacity="0.16" stroke-width="3"/>
+  <!-- Letter L -->
+  <g fill="url(#lgold)">
+    <rect x="179" y="150" width="62" height="212" rx="31"/>
+    <rect x="179" y="300" width="158" height="62" rx="31"/>
+  </g>
+  <!-- spark accent -->
+  <path d="M357 168c2.1 12.6 5.8 16.3 18.4 18.4-12.6 2.1-16.3 5.8-18.4 18.4-2.1-12.6-5.8-16.3-18.4-18.4 12.6-2.1 16.3-5.8 18.4-18.4Z" fill="#F2DDAA" opacity="0.92"/>
+</svg>

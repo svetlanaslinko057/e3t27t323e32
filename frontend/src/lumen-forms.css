@@ -1,0 +1,263 @@
+/* ============================================================
+   LUMEN FORM CONTROLS — global stylesheet for native HTML form
+   elements so they match Lumen's visual language without having
+   to rewrite every page. Loaded LAST so it wins specificity ties.
+
+   Covers:
+     • <select>          → Lumen-styled (no more raw gray native dropdown)
+     • <input[type=text|email|password|number|search|tel|url|date|datetime-local|time]>
+     • <textarea>
+     • <input[type=file]>
+     • <input[type=checkbox]> / <input[type=radio]>
+
+   Tokens:
+     --t-bg-surface, --t-text-primary, --t-text-secondary,
+     --t-border, --t-primary, --token-primary
+
+   Opt-out:
+     Add `.lumen-raw` to any control or its ancestor to keep the
+     browser default appearance (rare — e.g. emergent-injected
+     widgets that style themselves).
+   ============================================================ */
+
+/* ----- SELECT (the big one) ---------------------------------- */
+/* Reset + restyle ALL native selects under the app shell. */
+.app-main select:not([class*="lumen-raw"]):not(.lumen-raw),
+.app-sidebar select:not([class*="lumen-raw"]):not(.lumen-raw),
+[data-testid$="-layout"] select:not([class*="lumen-raw"]):not(.lumen-raw) {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 36px 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--t-border-default, var(--token-border, #E6E1D6));
+  background-color: var(--t-surface, var(--token-surface, #FFFFFF));
+  color: var(--t-text-primary, var(--token-primary, #1B1B1B));
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+  box-shadow: 0 1px 0 rgba(20, 18, 15, 0.02);
+
+  /* custom chevron via background image (works across all themes) */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2370706b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+}
+
+/* Dark theme chevron in lighter tone */
+.dark .app-main select:not(.lumen-raw),
+.dark .app-sidebar select:not(.lumen-raw),
+.dark [data-testid$="-layout"] select:not(.lumen-raw),
+[data-theme="dark"] .app-main select:not(.lumen-raw) {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a8a59d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+}
+
+/* Hover state */
+.app-main select:not(.lumen-raw):hover,
+.app-sidebar select:not(.lumen-raw):hover,
+[data-testid$="-layout"] select:not(.lumen-raw):hover {
+  border-color: var(--t-signal, var(--token-primary, #2E5D4F));
+  background-color: var(--t-surface-raised, var(--token-surface-elevated, #FBF9F4));
+}
+
+/* Focus state — amber/primary ring */
+.app-main select:not(.lumen-raw):focus,
+.app-sidebar select:not(.lumen-raw):focus,
+[data-testid$="-layout"] select:not(.lumen-raw):focus,
+.app-main select:not(.lumen-raw):focus-visible {
+  outline: none;
+  border-color: var(--t-signal, var(--token-primary, #2E5D4F));
+  box-shadow: 0 0 0 3px var(--t-signal-bg-strong, rgba(46,93,79,0.22));
+}
+
+/* Disabled */
+.app-main select:not(.lumen-raw):disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Size variants if pages opt in */
+.app-main select.select-sm { min-height: 36px; padding: 0 32px 0 12px; font-size: 13px; }
+.app-main select.select-lg { min-height: 48px; padding: 0 40px 0 16px; font-size: 15px; }
+
+/* Multi-select gets different layout (no chevron) */
+.app-main select[multiple]:not(.lumen-raw) {
+  background-image: none;
+  padding-right: 14px;
+  min-height: 120px;
+  align-items: stretch;
+}
+
+
+/* ----- TEXT-LIKE INPUTS -------------------------------------- */
+.app-main input[type="text"]:not(.lumen-raw),
+.app-main input[type="email"]:not(.lumen-raw),
+.app-main input[type="password"]:not(.lumen-raw),
+.app-main input[type="number"]:not(.lumen-raw),
+.app-main input[type="search"]:not(.lumen-raw),
+.app-main input[type="tel"]:not(.lumen-raw),
+.app-main input[type="url"]:not(.lumen-raw),
+.app-main input[type="date"]:not(.lumen-raw),
+.app-main input[type="datetime-local"]:not(.lumen-raw),
+.app-main input[type="time"]:not(.lumen-raw),
+.app-main input[type="month"]:not(.lumen-raw),
+.app-main input[type="week"]:not(.lumen-raw),
+.app-main textarea:not(.lumen-raw) {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--t-border-default, var(--token-border, #E6E1D6));
+  background-color: var(--t-surface, var(--token-surface, #FFFFFF));
+  color: var(--t-text-primary, var(--token-primary, #1B1B1B));
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+  box-shadow: 0 1px 0 rgba(20, 18, 15, 0.02);
+}
+.app-main textarea:not(.lumen-raw) {
+  min-height: 96px;
+  align-items: stretch;
+  resize: vertical;
+}
+.app-main input:not(.lumen-raw):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="submit"]):not([type="button"]):not([type="reset"]):hover,
+.app-main textarea:not(.lumen-raw):hover {
+  border-color: var(--t-text-secondary, #70706b);
+}
+.app-main input:not(.lumen-raw):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="submit"]):not([type="button"]):not([type="reset"]):focus,
+.app-main textarea:not(.lumen-raw):focus {
+  outline: none;
+  border-color: var(--t-signal, var(--token-primary, #2E5D4F));
+  box-shadow: 0 0 0 3px var(--t-signal-bg-strong, rgba(46,93,79,0.22));
+}
+.app-main input:not(.lumen-raw):not([type="checkbox"]):not([type="radio"]):disabled,
+.app-main textarea:not(.lumen-raw):disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.app-main input::placeholder,
+.app-main textarea::placeholder {
+  color: var(--t-text-secondary, var(--token-muted, #70706b));
+  opacity: 0.7;
+}
+
+
+/* ----- FILE INPUT -------------------------------------------- */
+.app-main input[type="file"]:not(.lumen-raw) {
+  font-size: 13px;
+  color: var(--t-text-secondary);
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px dashed var(--t-border-default, #E6E1D6);
+  background: var(--t-surface-raised, #FBF9F4);
+  cursor: pointer;
+  width: 100%;
+}
+.app-main input[type="file"]:not(.lumen-raw)::file-selector-button {
+  margin-right: 12px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--t-border-default, #E6E1D6);
+  background: var(--t-surface, #FFFFFF);
+  color: var(--t-text-primary);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+.app-main input[type="file"]:not(.lumen-raw)::file-selector-button:hover {
+  background: var(--t-surface-raised, #FBF9F4);
+  border-color: var(--t-signal, #2E5D4F);
+}
+
+
+/* ----- CHECKBOX / RADIO ------------------------------------- */
+.app-main input[type="checkbox"]:not(.lumen-raw),
+.app-main input[type="radio"]:not(.lumen-raw) {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--t-signal, var(--token-primary, #2E5D4F));
+  cursor: pointer;
+}
+
+
+/* ----- BUTTONS — leave alone, pages style their own ---------- */
+/* (intentionally no global button override) */
+
+
+/* ----- LUMEN PAGE WRAPPER (component) ------------------------ */
+/* When PageContainer is used, responsive.css already zeros out
+   the inner first-child horizontal padding, so the PageContainer
+   itself supplies the canonical 50/24/16 inset cleanly. No extra
+   override needed here. */
+
+
+/* ----- CABINET CARD SURFACES (consistent shell) -------------- */
+.lumen-card {
+  background-color: var(--t-surface, var(--token-surface, #FFFFFF));
+  border: 1px solid var(--t-border-default, var(--token-border, #E6E1D6));
+  border-radius: 16px;
+  box-shadow: 0 1px 0 rgba(20, 18, 15, 0.02);
+}
+.lumen-card-padded {
+  padding: clamp(16px, 1.5vw, 24px);
+}
+
+
+/* ----- INPUT LABEL CONVENTION -------------------------------- */
+.lumen-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--t-text-secondary, var(--token-muted, #70706b));
+  margin-bottom: 6px;
+}
+.lumen-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.lumen-helper {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--t-text-secondary);
+}
+.lumen-error {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #B91C1C;
+}
+.dark .lumen-error,
+[data-theme="dark"] .lumen-error {
+  color: #FB7185;
+}
+
+
+/* ----- FORCE FORM ELEMENT BACKGROUNDS IN DARK THEME ---------- */
+.dark .app-main select:not(.lumen-raw),
+.dark .app-main input:not(.lumen-raw):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+.dark .app-main textarea:not(.lumen-raw),
+[data-theme="dark"] .app-main select:not(.lumen-raw),
+[data-theme="dark"] .app-main input:not(.lumen-raw):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+[data-theme="dark"] .app-main textarea:not(.lumen-raw) {
+  background-color: var(--t-surface, #1B1E26);
+  color: var(--t-text-primary, #F0EBDE);
+  border-color: var(--t-border-default, rgba(255,255,255,0.10));
+}
+.dark .app-main input::placeholder,
+.dark .app-main textarea::placeholder {
+  color: var(--t-text-secondary, #B0AC9F);
+}

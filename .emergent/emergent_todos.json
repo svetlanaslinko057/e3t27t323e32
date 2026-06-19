@@ -1,0 +1,42 @@
+[
+  {
+    "content": "Study repo architecture & deployment requirements",
+    "status": "completed"
+  },
+  {
+    "content": "Migrate backend code from repo into /app/backend (preserve .env, MONGO_URL)",
+    "status": "completed"
+  },
+  {
+    "content": "Migrate frontend code into /app/frontend (preserve REACT_APP_BACKEND_URL)",
+    "status": "completed"
+  },
+  {
+    "content": "Migrate mobile, packages, docs, memory into /app",
+    "status": "completed"
+  },
+  {
+    "content": "Configure backend .env (DB_NAME, LUMEN flags, EMERGENT_LLM_KEY)",
+    "status": "completed"
+  },
+  {
+    "content": "Install backend deps (filtered requirements)",
+    "status": "completed"
+  },
+  {
+    "content": "Install frontend deps (yarn install)",
+    "status": "completed"
+  },
+  {
+    "content": "Restart services & verify backend boot (healthz/readyz)",
+    "status": "completed"
+  },
+  {
+    "content": "Verify frontend landing page renders",
+    "status": "completed"
+  },
+  {
+    "content": "End-to-end testing of website via testing agent",
+    "status": "in_progress"
+  }
+]

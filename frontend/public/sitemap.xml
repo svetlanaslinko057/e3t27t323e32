@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This stub points crawlers at the dynamic backend sitemap.
+     The real, always-fresh sitemap is at /api/seo/sitemap.xml. -->
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://lumen.com.ua/api/seo/sitemap.xml</loc>
+  </sitemap>
+</sitemapindex>

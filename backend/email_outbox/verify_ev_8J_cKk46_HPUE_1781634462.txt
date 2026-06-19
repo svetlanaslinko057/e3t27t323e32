@@ -1,0 +1,24 @@
+To: ev_probe_ac287e521e@audit-probe.example
+From: no-reply@lumen.platform
+Subject: [LUMEN] Підтвердіть email / Confirm email
+
+Привіт, EV Change!
+
+Щоб завершити реєстрацію в LUMEN, підтвердіть свою електронну пошту, перейшовши за посиланням нижче (діє 24 години):
+
+/verify-email?token=ev_8J_cKk46_HPUEcgErY0CYuR1T3WE7KHapKts3RI9U8k
+
+Якщо ви не реєструвалися — просто проігноруйте цей лист.
+
+— LUMEN Team
+
+---
+Hi, EV Change!
+
+Click the link below within 24 hours to confirm your email and finish your LUMEN registration:
+
+/verify-email?token=ev_8J_cKk46_HPUEcgErY0CYuR1T3WE7KHapKts3RI9U8k
+
+If you didn't sign up, ignore this email.
+
+— LUMEN Team

@@ -1,0 +1,19 @@
+{
+  "cli": { "version": ">= 5.0.0" },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": { "EXPO_PUBLIC_API_URL": "https://expo-project-hub-1.preview.emergentagent.com" }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": { "EXPO_PUBLIC_API_URL": "https://expo-project-hub-1.preview.emergentagent.com" }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": { "EXPO_PUBLIC_API_URL": "https://expo-project-hub-1.preview.emergentagent.com" }
+    }
+  },
+  "submit": { "production": {} }
+}

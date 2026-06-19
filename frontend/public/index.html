@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="uk">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="color-scheme" content="dark light" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#13151A" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAF8F4" />
+
+        <title>Lumen · Колективні інвестиції в реальні активи</title>
+        <meta name="description" content="Lumen — українська платформа колективного вкладення в нерухомість, землю, будівництво та комерційні об'єкти. SPV-структура, юридичні договори, прозорі звіти, регулярні виплати." />
+        <meta name="keywords" content="Lumen, інвестиції в нерухомість, колективні інвестиції, SPV, інвест-платформа, нерухомість Україна" />
+        <meta name="author" content="Lumen" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+        <meta property="og:type"        content="website" />
+        <meta property="og:site_name"   content="Lumen" />
+        <meta property="og:title"       content="Lumen · Реальні активи. Прозорі інвестиції." />
+        <meta property="og:description" content="Колективне вкладення в нерухомість, землю, будівництво та комерцію в Україні." />
+        <meta property="og:image"       content="%PUBLIC_URL%/lumen-logo.svg" />
+        <meta property="og:locale"      content="uk_UA" />
+
+        <meta name="twitter:card"        content="summary_large_image" />
+        <meta name="twitter:title"       content="Lumen · Реальні активи. Прозорі інвестиції." />
+        <meta name="twitter:description" content="Колективне вкладення в нерухомість, землю, будівництво та комерцію в Україні." />
+        <meta name="twitter:image"       content="%PUBLIC_URL%/lumen-logo.svg" />
+
+        <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
+        <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16.png" />
+        <link rel="alternate icon" type="image/x-icon" href="%PUBLIC_URL%/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png" />
+        <link rel="mask-icon" href="%PUBLIC_URL%/favicon.svg" color="#2E5D4F" />
+        <meta name="apple-mobile-web-app-capable"          content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title"            content="Lumen" />
+        <meta name="application-name"                      content="Lumen" />
+        <meta name="msapplication-TileColor"               content="#16382E" />
+        <meta name="msapplication-TileImage"               content="%PUBLIC_URL%/favicon-192.png" />
+
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+        <script>
+        (function () {
+          try {
+            var raw = localStorage.getItem('atlas_theme') || localStorage.getItem('atlas-theme') || localStorage.getItem('lumen_theme');
+            var theme = (raw === 'dark' || raw === 'light') ? raw : null;
+            if (!theme && window.matchMedia) {
+              theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            }
+            theme = theme || 'dark';
+            var root = document.documentElement;
+            root.classList.add('theme-' + theme, theme);
+            root.setAttribute('data-theme', theme);
+            root.style.colorScheme = theme;
+            root.style.backgroundColor = theme === 'light' ? '#FAF8F4' : '#13151A';
+          } catch (_) { /* never block render */ }
+        })();
+        </script>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preload"
+              as="style"
+              href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+              onload="this.onload=null;this.rel='stylesheet'" />
+        <noscript>
+          <link rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+        </noscript>
+    </head>
+    <body>
+        <noscript>
+          <div style="padding:24px;font-family:system-ui;text-align:center;">
+            <h1>Lumen · Колективні інвестиції</h1>
+            <p>Цей застосунок потребує JavaScript. Будь ласка, увімкніть його в налаштуваннях браузера.</p>
+          </div>
+        </noscript>
+        <div id="root"></div>
+    </body>
+</html>
