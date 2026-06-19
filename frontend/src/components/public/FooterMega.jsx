@@ -114,10 +114,10 @@ export const FooterMega = () => {
           </button>
         </div>
 
-        {/* prominent wordmark — REAL LUMEN logo (cream + gold stripe) */}
+        {/* prominent wordmark — REAL current LUMEN logo (same as header) */}
         <div className="lpub-foot__mega">
           <span className="lpub-foot__mega-badge">EST. 2024</span>
-          <img src={`${base}/branding/lumen-light.png`} alt="LUMEN" className="lpub-foot__megaimg" draggable={false}
+          <img src={`${base}/branding/lumen-light.v4.png`} alt="LUMEN" className="lpub-foot__megaimg" draggable={false}
             onError={(e) => { e.currentTarget.style.display = 'none'; }} />
         </div>
 
