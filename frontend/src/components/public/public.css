@@ -295,3 +295,26 @@
 @media (prefers-reduced-motion: reduce) {
   .lpub-asset, .lpub-teaser, .lpub-asset__media img { transition: none; }
 }
+
+/* ===========================================================================
+   "Шлях інвестора" — restored original journey-card hover effect, no scroll.
+   Reuses .journey-card rules from LandingPage.css; provides the --journey-*
+   palette tokens + a static 4-up grid (no horizontal scroll).
+   =========================================================================== */
+.lpub-journey {
+  --journey-cream: #F4ECDA;
+  --journey-forest: #2E5D4F;
+  --journey-gold: #C9A961;
+  --journey-champagne: #E5C98A;
+  --journey-surface: color-mix(in oklab, var(--card) 90%, var(--journey-cream) 10%);
+  --journey-border: color-mix(in oklab, var(--border) 65%, var(--journey-gold) 35%);
+  --journey-border-strong: color-mix(in oklab, var(--border) 45%, var(--journey-gold) 55%);
+  --journey-shadow: 0 1px 0 rgba(20,18,15,0.05), 0 14px 40px rgba(20,18,15,0.10);
+  --journey-shadow-hover: 0 1px 0 rgba(20,18,15,0.08), 0 22px 60px rgba(20,18,15,0.18);
+  --journey-radius: 18px;
+  --journey-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  display: grid; gap: 1.5rem; grid-template-columns: 1fr;
+}
+@media (min-width: 640px) { .lpub-journey { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .lpub-journey { grid-template-columns: repeat(4, 1fr); } }
+.lpub-journey .journey-card { width: auto; max-width: none; padding: 1.5rem 1.5rem 1.35rem; }

@@ -49,17 +49,35 @@ export default function PublicHowPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal><SectionLabel>4 кроки</SectionLabel></Reveal>
           <Reveal delay={0.05}><h2 className="lpub-h2 mt-4 max-w-2xl">Шлях інвестора — від вибору до виходу</h2></Reveal>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {STEPS.map((s, i) => (
-              <Reveal key={i} delay={i * 0.08}>
-                <div className="relative h-full rounded-2xl border border-border bg-white p-6 transition hover:border-[#C9A961]/60 hover:shadow-[0_24px_50px_-30px_rgba(201,169,97,0.5)]">
-                  <span className="font-mono text-xs font-bold tracking-widest text-[#C9A961]">{String(i + 1).padStart(2, '0')}</span>
-                  <div className="mt-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#E5C98A]/25 to-[#C9A961]/15 text-[#A98A45] ring-1 ring-[#C9A961]/25"><s.icon className="h-6 w-6" /></div>
-                  <h3 className="mt-4 font-semibold text-lg" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>{s.t}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-token-muted">{s.d}</p>
-                </div>
-              </Reveal>
-            ))}
+          <div className="lpub-journey mt-12" data-testid="how-journey">
+            {STEPS.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <motion.article
+                  key={i}
+                  className="journey-card"
+                  data-testid={`how-step-card-${i}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="journey-card__top">
+                    <span className="journey-card__num">[ <strong>{String(i + 1).padStart(2, '0')}</strong> ]</span>
+                  </div>
+                  <span className="journey-card__iconWrap">
+                    <Icon className="journey-card__icon" width={18} height={18} />
+                  </span>
+                  <h3 className="journey-card__title">{s.t}</h3>
+                  <p className="journey-card__desc">{s.d}</p>
+                  <span className="journey-card__cue">
+                    {i < STEPS.length - 1 ? 'далі' : 'готово'}
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                  <span className="journey-card__underline" />
+                </motion.article>
+              );
+            })}
           </div>
         </div>
       </section>
