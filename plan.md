@@ -1,106 +1,112 @@
-# plan.md — LUMEN Public Website Restructure (Multi‑page, Far Minerals / ECO style)
+# plan.md — LUMEN Public Assets Upgrade (List + Detail)
 
 ## 1) Objectives
-- Convert the public marketing site from a **single scrolling landing** into a **multi-page public site** where every menu item opens a dedicated route.
-- Implement a shared **PublicLayout shell** (sticky header + animated overlay menu + page transitions + giant multi-column footer) used by all public marketing routes.
-- Refactor Landing (`/`) into **selling teasers only** with “Детальніше” CTAs routing to dedicated pages.
-- Create/upgrade public pages (UA only):
-  - `/how` (Принцип роботи та безпека)
-  - `/assets` (каталог + відкриті раунди)
-  - `/calculator` (дохідність)
-  - `/contacts` (Контакти + FAQ)
-  - keep `/otc`, `/app`
-- Keep **LUMEN palette** and premium animation style inspired by Farm Minerals + ECO reference repo.
+- Upgrade **/assets** public list UX: better search (hints + validation), richer sorting, and **progressive pagination** (6 → +6 “Показати більше” / “Show more”).
+- Upgrade **/objects/:id** public detail:
+  - **Capital Stack**: show **real** raised split **crypto vs fiat** from backend pool contributions; simplify structure (Investors split + Reserve + Own/platform; no debt).
+  - **Location**: replace static map with **free, no-key** interactive map (Leaflet + OSM) + “Прокласти маршрут” button (BB Cars style) that uses geolocation and opens Google Maps directions.
+- Add **6–9 demo assets** + seeded pools/contributions so list pagination + capital stack have real data.
 
 ## 2) Implementation Steps
 
-### Phase 1 — Core POC (Public shell + routing + menu)
-User stories:
-1. As a visitor, I can open the full-screen menu and navigate to any section as a standalone page.
-2. As a visitor, the URL changes for each section (e.g. `/how`) and the page loads from the top.
-3. As a visitor, I see a consistent header/footer across all public pages.
-4. As a visitor, I experience smooth transitions (menu stagger, page curtain) without layout jumps.
-5. As a visitor, I can always find Contacts from any page.
+### Phase 1 — Core POC (prove the hard parts work end-to-end)
+**User stories (POC)**
+1. As a visitor, I can open an asset and see **crypto vs fiat** amounts computed from real contribution records.
+2. As a visitor, the capital stack does **not** show credit/debt.
+3. As a visitor, I see an interactive map with a marker at the object location (no API key).
+4. As a visitor, I can click “Прокласти маршрут” and get Google Maps directions from my current location.
+5. As a visitor, I can load more assets beyond the first 6.
 
-Steps:
-- Create `layouts/PublicLayout.jsx` (modeled after ECO `PublicLayout`):
-  - sticky header (left menu trigger, center logo, right phone + CTA + auth)
-  - overlay menu with staggered reveal, watermark in scrim, ESC/scroll-lock
-  - route-change scroll reset + optional “curtain” transition component
-  - `<Outlet />` for public pages
-- Extract/replace current menu logic:
-  - move `MenuOverlay` out of `LandingPage.js` into `components/public/PublicMenuOverlay.jsx`
-  - centralize NAV config (UA only) in `components/public/publicNav.js`
-- Add public routes under the layout in `App.js`:
-  - `/`, `/how`, `/assets`, `/calculator`, `/contacts`, `/otc`, `/otc/:id`, `/app`
-- POC verification (manual): open menu → navigate between all public pages, confirm header/footer persist, no console errors.
+**Backend POC (data + aggregation)**
+- Add aggregation helper: sum confirmed `lumen_pool_contributions` by `gateway` for a given `asset_id` → `{fiat_usd, crypto_usd, total_usd}`.
+- Update `backend/lumen_asset_intelligence.py:_capital_stack`:
+  - Remove `debt` layer.
+  - Layers: `investors_fiat`, `investors_crypto` (real aggregation), `reserve` (authored or derived), `platform` (own funds; authored or 0).
+  - Keep `asset_value` and `investor_share_percent` (based on investors total / total capital).
+- Seed real data:
+  - Create pools in `lumen_pools` for each asset.
+  - Create **confirmed** contributions in `lumen_pool_contributions` with a realistic crypto/fiat mix.
+- Quick verification scripts/curl:
+  - `GET /api/assets/{id}/intelligence` returns `capital_stack.layers` including both investor split layers with non-zero values.
 
-### Phase 2 — V1 App Development (pages + footer + landing teasers)
-User stories:
-1. As a visitor, the landing page quickly explains the value and guides me via “Детальніше” buttons.
-2. As a visitor, `/assets` shows live assets and open rounds with clear cards and a “Деталі” action.
-3. As a visitor, `/calculator` lets me estimate income/yield and understand assumptions.
-4. As a visitor, `/how` explains the full flow (buy → ownership → payouts) and the security model (SPV + certificate).
-5. As a visitor, `/contacts` shows direct channels + FAQ + a quick request form.
+**Frontend POC (map + directions + capital stack render)**
+- Install `leaflet` and CSS.
+- Implement `frontend/src/components/public/AssetMap.jsx` using plain Leaflet (avoid react-leaflet peer issues).
+- Replace map block in `frontend/src/pages/PublicAssetDetail.js`:
+  - Render Leaflet map if dto.map has lat/lng.
+  - Add “Прокласти маршрут” button:
+    - `navigator.geolocation.getCurrentPosition()` → open `https://www.google.com/maps/dir/?api=1&origin=LAT,LNG&destination=ALAT,ALNG`.
+    - If denied/unavailable: open destination search link.
+- Ensure `CapitalStack` component displays the new layers clearly (labels “Кошти інвесторів · фіатом/криптою”).
 
-Steps:
-- Build reusable UI primitives (LUMEN palette):
-  - `components/public/PageHero.jsx` (breadcrumb “ГОЛОВНА • …”, title, subtitle)
-  - `components/public/Reveal.jsx` (framer-motion `useInView` scroll reveal)
-  - `components/public/PublicCurtain.jsx` (simple route transition)
-- Implement **giant footer** (`components/public/PublicFooter.jsx`) inspired by ECO:
-  - brand + tagline + CTA buttons
-  - columns: “Сайт”, “Довідник”
-  - contacts block
-  - newsletter signup (backend endpoint if exists; otherwise graceful no-op + message)
-  - giant wordmark background “LUMEN”
-  - bottom bar (© year, badges, privacy/terms links)
-- Create/upgrade pages:
-  - `pages/public/PublicHowPage.jsx` (`/how`) — combine “як працює” + “безпека та власність”, expanded UA content
-  - `pages/public/PublicAssetsPage.jsx` (`/assets`) — call existing `/api/assets`, filters (basic), link to existing `/objects/:id`
-  - `pages/public/PublicCalculatorPage.jsx` (`/calculator`) — inputs + computed outputs; optional “приклади сценаріїв” blocks
-  - `pages/public/PublicContactsPage.jsx` (`/contacts`) — direct channels, “manager online” indicator, FAQ accordion, request form
-- Refactor Landing (`LandingPage.js`):
-  - remove deep content sections (How/Security/FAQ/Calculator long blocks)
-  - keep hero + key selling narrative + teaser cards pointing to `/how`, `/assets`, `/calculator`, `/otc`, `/app`, `/contacts`
-- Ensure `/otc` and `/app` render inside the new PublicLayout (consistent header/footer).
-- Call testing agent for V1 end-to-end validation of navigation + page rendering + key interactions.
+**Exit criteria (POC)**
+- One asset shows correct crypto/fiat split + reserve + platform; Leaflet map renders; directions button opens Google Maps.
 
-### Phase 3 — Hardening + missing public endpoints (only if needed)
-User stories:
-1. As a visitor, contact requests always give me a clear success/error message.
-2. As a visitor, newsletter signup validates email and confirms subscription.
-3. As a visitor, pages load fast and animations don’t stutter.
-4. As a visitor, the menu works on mobile and desktop consistently.
-5. As a visitor, I can share any page URL and it opens correctly.
+---
 
-Steps:
-- Audit backend for existing public endpoints:
-  - newsletter: `/api/public/footer` / subscribe endpoint equivalents
-  - contact request endpoint
-- If missing, add **minimal** backend endpoints:
-  - `POST /api/public/contact` (store to collection + optional email outbox)
-  - `POST /api/public/newsletter/subscribe`
-- Add form validation + loading/success/error states.
-- Polish animations: delays, easing, reduced motion support.
-- Call testing agent again for regression (routes, forms, assets list, otc).
+### Phase 2 — V1 App Development (assets list + detail polish)
+**User stories (V1)**
+1. As a visitor on /assets, I can search by name/location with helpful suggestions.
+2. As a visitor, invalid/empty search behaves gracefully (trim, min chars, clear state).
+3. As a visitor, I can sort assets by yield, min ticket, progress, and newest.
+4. As a visitor, I see 6 cards by default and can load more via “Показати більше”.
+5. As a visitor on /objects/:id, I see capital stack with real crypto/fiat breakdown and a map + route button.
 
-### Phase 4 — Future (after approval)
-- Re-enable bilingual content (restore `bi()` usage) once UA-only V1 is accepted.
-- Add SEO: titles/meta per route, OpenGraph for share.
-- Add “Knowledge/Blog” if desired, and legal docs links in footer.
+**/assets page upgrades (`PublicAssetsPage.jsx`)**
+- Search UX:
+  - Trim input; optional min length before filtering (e.g., 2 chars) with subtle hint.
+  - Add suggestions dropdown (top matches by title/location) with keyboard + click select.
+  - “No results” state remains.
+- Sorting:
+  - Add sort dropdown: `yield_desc`, `min_ticket_asc/desc`, `progress_desc`, `newest` (by `created_at`/`updated_at` fallback).
+- Pagination:
+  - Render `visibleCount=6`; button increments by 6.
+  - Button label: UA “Показати більше”, EN “Show more” (reuse i18n if available; else UA-only now).
+  - Reset visibleCount on filter/query/sort change.
+- Add 6–9 demo assets (seed) so pagination is testable.
+
+**Asset detail polish (`PublicAssetDetail.js`)**
+- Capital Stack:
+  - Add small note: “Дані зібрані з внесків пулу (fiat/crypto)”.
+  - Ensure percent bar looks good with new layers.
+- Location:
+  - Style map container to match LUMEN (rounded, border, subtle shadow).
+  - Keep “Відкрити в Google Maps” link.
+
+**Testing (end of Phase 2)**
+- Call testing agent for:
+  - /assets search + suggestions + validation + sort + show-more.
+  - /objects/:id capital stack split correctness + map + directions button.
+
+---
+
+### Phase 3 — Hardening + Admin hooks (as needed)
+**User stories (hardening)**
+1. As an admin (later), I can set reserve/platform amounts per asset for correct capital structure.
+2. As a visitor, capital stack still renders sensibly even if contributions are missing.
+3. As a visitor, map gracefully falls back when coords are missing.
+4. As a visitor, performance stays smooth with more assets.
+5. As a visitor, sorting behaves consistently across pagination.
+
+- Backend fallbacks:
+  - If no contributions: set investors split to 0/0 and rely on reserve/platform authored or derived.
+- Optional admin additions:
+  - Add admin fields to edit `asset.capital_stack.reserve` and `asset.capital_stack.platform`.
+- Add lightweight caching of aggregation results per request (optional).
+- Regression test again via testing agent.
 
 ## 3) Next Actions (immediate)
-1. Create `PublicLayout` + `PublicMenuOverlay` + `PublicFooter` scaffold and wire routes.
-2. Implement `/how` and `/contacts` first (highest “style” signal pages), matching ECO/Farm animations.
-3. Refactor Landing into teasers with clean CTAs.
-4. Build `/assets` (live data) and `/calculator` (working compute).
-5. Run testing agent on navigation + page rendering + forms.
+1. Implement backend aggregation + update `_capital_stack` to output investor_fiat/investor_crypto layers.
+2. Add seed script to create pools + confirmed contributions (crypto+fiat mix) for each asset.
+3. Install Leaflet and implement `AssetMap.jsx`; wire into `PublicAssetDetail.js` and add “Прокласти маршрут”.
+4. Upgrade `/assets` list: suggestions + sorting + show-more + seed extra demo assets.
+5. Run testing agent on /assets and /objects/:id.
 
 ## 4) Success Criteria (Definition of Done)
-- Menu items open dedicated URLs: `/how`, `/assets`, `/calculator`, `/otc`, `/app`, `/contacts`.
-- Landing (`/`) no longer duplicates full content; it only teases and routes to pages.
-- PublicLayout header/footer consistent across all public pages; overlay menu animated and usable.
-- Footer is “розмашистий” (multi-column + newsletter + giant wordmark) and fits LUMEN palette.
-- `/assets` displays live assets from backend; `/calculator` computes; `/contacts` form behaves correctly.
-- No red-screen errors, no critical console errors; testing agent validates core flows.
+- /assets:
+  - Search has hints/suggestions + robust behavior; sorting works; shows 6 cards initially; “Показати більше/Show more” loads next items.
+  - With seeded assets, pagination is demonstrably meaningful.
+- /objects/:id:
+  - Capital stack shows real investor split **fiat vs crypto** derived from confirmed contributions; includes reserve + platform; no debt layer.
+  - Interactive Leaflet+OSM map renders with marker; “Прокласти маршрут” opens Google Maps directions from user location (or falls back).
+- Testing agent validates key flows with no critical console/API errors.
