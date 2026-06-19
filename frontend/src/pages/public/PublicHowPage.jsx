@@ -52,9 +52,9 @@ export default function PublicHowPage() {
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {STEPS.map((s, i) => (
               <Reveal key={i} delay={i * 0.08}>
-                <div className="relative h-full rounded-2xl border border-border bg-white p-6">
-                  <span className="font-mono text-xs font-bold tracking-widest text-[#2E5D4F]/50">{String(i + 1).padStart(2, '0')}</span>
-                  <div className="mt-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#2E5D4F]/10 text-[#2E5D4F]"><s.icon className="h-6 w-6" /></div>
+                <div className="relative h-full rounded-2xl border border-border bg-white p-6 transition hover:border-[#C9A961]/60 hover:shadow-[0_24px_50px_-30px_rgba(201,169,97,0.5)]">
+                  <span className="font-mono text-xs font-bold tracking-widest text-[#C9A961]">{String(i + 1).padStart(2, '0')}</span>
+                  <div className="mt-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#E5C98A]/25 to-[#C9A961]/15 text-[#A98A45] ring-1 ring-[#C9A961]/25"><s.icon className="h-6 w-6" /></div>
                   <h3 className="mt-4 font-semibold text-lg" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>{s.t}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-token-muted">{s.d}</p>
                 </div>

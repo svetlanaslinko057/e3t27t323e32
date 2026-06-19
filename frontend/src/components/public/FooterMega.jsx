@@ -114,10 +114,11 @@ export const FooterMega = () => {
           </button>
         </div>
 
-        {/* prominent wordmark — solid + outline */}
-        <div className="lpub-foot__mega" aria-hidden>
+        {/* prominent wordmark — REAL LUMEN logo (cream + gold stripe) */}
+        <div className="lpub-foot__mega">
           <span className="lpub-foot__mega-badge">EST. 2024</span>
-          <span className="lpub-foot__mega-s">LU</span><span className="lpub-foot__mega-o">MEN</span><i className="lpub-foot__mega-dot" />
+          <img src={`${base}/branding/lumen-light.png`} alt="LUMEN" className="lpub-foot__megaimg" draggable={false}
+            onError={(e) => { e.currentTarget.style.display = 'none'; }} />
         </div>
 
         <p className="lpub-foot__centertag"><span /> Інвестуйте в те, що існує насправді <span /></p>

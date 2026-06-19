@@ -54,6 +54,14 @@ export const PageHero = ({
           {title}{highlight && <><br /><span className="lumen-gradient-text">{highlight}</span></>}
         </motion.h1>
 
+        <motion.span
+          aria-hidden
+          className="lpub-hero__rule"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        />
+
         {lead && (
           <motion.p
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 18 }}
