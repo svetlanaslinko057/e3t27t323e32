@@ -114,11 +114,11 @@ user_problem_statement: |
 frontend:
   - task: "Advanced asset-based yield calculator on /calculator page"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/components/public/AssetYieldCalculator.jsx, frontend/src/pages/public/PublicCalculatorPage.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
@@ -127,12 +127,16 @@ frontend:
             from dead code in LandingPage.js into a new reusable, publicly-styled component
             AssetYieldCalculator.jsx. Removed the basic version from PublicCalculatorPage.jsx
             and now render the advanced calculator + explanatory 'how income is calculated'
-            blocks + CTA. Calculator fetches GET /api/assets?status=open (3 open assets seeded),
-            falls back to FALLBACK_ASSETS on error. data-testids: calc-asset (asset select),
-            calc-amount (USD input), calculator-invest-amount-input (slider), calc-projection
-            (result panel), calculator-result, calculator-cta. Compiles clean (no JS errors).
-            Screenshot rendered hero correctly; needs interaction testing to confirm projection
-            updates on asset change + amount change + validation messages (min ticket / pool cap).
+            blocks + CTA.
+        - working: true
+          agent: "testing"
+          comment: |
+            100% pass (iteration_3.json). Verified: asset selector lists 3 open assets and
+            updates info + projection on change; amount input + slider update all projection
+            metrics (pool share %, monthly rental, appreciation, gross/net profit, 19.5% tax,
+            effective IRR, total at exit, 3 scenarios); min-ticket validation shows red error
+            and hides projection; CTA navigates to /objects/{id}; OLD basic calculator UI fully
+            removed. No issues found.
 
 metadata:
   created_by: "main_agent"

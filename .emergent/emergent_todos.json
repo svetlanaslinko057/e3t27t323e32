@@ -21,10 +21,10 @@
   },
   {
     "content": "Test /calculator advanced calculator end-to-end via testing agent",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Fix any issues found + finalize",
-    "status": "pending"
+    "status": "completed"
   }
 ]
