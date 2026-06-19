@@ -1,26 +1,30 @@
 [
   {
-    "content": "Phase 1: Shared public shell (PublicLayout, header, overlay menu, mega footer, primitives, public.css)",
+    "content": "Migrate GitHub repo content into /app (preserve protected .env files)",
     "status": "completed"
   },
   {
-    "content": "Phase 1: Wire routes under PublicLayout",
+    "content": "Configure backend .env (DB_NAME=lumen_database, LUMEN flags, EMERGENT_LLM_KEY)",
     "status": "completed"
   },
   {
-    "content": "Phase 2: Build /how, /assets, /calculator, /contacts pages",
+    "content": "Install backend Python dependencies (filtered to avoid conflicts)",
     "status": "completed"
   },
   {
-    "content": "Phase 2: Refactor landing into teasers; strip headers/footers from /otc /app",
+    "content": "Install frontend dependencies (React 19) via yarn",
     "status": "completed"
   },
   {
-    "content": "Phase 3: Backend endpoints (contact + newsletter)",
+    "content": "Restart services and verify clean startup (logs, healthz/readyz)",
     "status": "completed"
   },
   {
-    "content": "Phase 3: End-to-end testing via testing agent — PASSED (0 issues)",
+    "content": "Seed admin/test users + verify key API endpoints + landing page renders",
+    "status": "completed"
+  },
+  {
+    "content": "Audit summary + provide preview URL to user",
     "status": "completed"
   }
 ]
