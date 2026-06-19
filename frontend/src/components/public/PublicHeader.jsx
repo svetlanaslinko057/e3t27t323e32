@@ -1,22 +1,79 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Phone } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Globe, ChevronDown, CheckCircle2 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import ThemeToggle from '@/components/ThemeToggle';
 import PublicWalletButton from '@/components/otc/PublicWalletButton';
 import WalletConnectButton from '@/components/WalletConnectButton';
 import { useAuth } from '@/App';
-import { useContactModal } from '@/contexts/ContactModalContext';
-import { LUMEN_CONTACTS } from '@/components/public/publicNav';
+import { useLang } from '@/contexts/LanguageContext';
 import PublicMenuOverlay from '@/components/public/PublicMenuOverlay';
+
+/* Language switcher — restored original logic (UA / EN). */
+function LangSwitch() {
+  const { lang, setLang, bi } = useLang();
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const onDoc = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', onDoc);
+    return () => document.removeEventListener('mousedown', onDoc);
+  }, []);
+  const OPTS = [
+    { code: 'uk', short: 'UA', label: 'Українська' },
+    { code: 'en', short: 'EN', label: 'English' },
+  ];
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="lumen-lang-btn"
+        data-testid="lang-switch"
+        aria-label={bi('Змінити мову', 'Change language')}
+      >
+        <Globe className="w-4 h-4" />
+        <span className="text-xs font-semibold uppercase tracking-wide">{lang === 'uk' ? 'UA' : 'EN'}</span>
+        <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.98 }}
+            transition={{ duration: 0.16, ease: [0.25, 0.1, 0.25, 1] }}
+            className="lumen-lang-menu"
+            data-testid="lang-menu"
+          >
+            {OPTS.map((o) => (
+              <button
+                key={o.code}
+                type="button"
+                onClick={() => { setLang(o.code); setOpen(false); }}
+                className={`lumen-lang-item ${lang === o.code ? 'is-active' : ''}`}
+                data-testid={`lang-${o.code}`}
+              >
+                <span className="font-semibold">{o.short}</span>
+                <span className="text-muted-foreground">{o.label}</span>
+                {lang === o.code && <CheckCircle2 className="w-3.5 h-3.5 ml-auto text-[#2E5D4F]" />}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 /**
  * Unified public site header used by ALL public pages via PublicLayout.
- * Left: MENU trigger (opens overlay). Center: logo. Right: phone + CTA + auth.
+ * Left: MENU emblem trigger (opens overlay). Center: logo.
+ * Right (original logic): language · wallet · theme · auth.
  */
 export const PublicHeader = () => {
   const { user } = useAuth();
-  const { openContact } = useContactModal();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const isInvestor = user && ['investor', 'client'].includes(user.role);
@@ -32,7 +89,7 @@ export const PublicHeader = () => {
     <>
       <header className={`lpub-header ${scrolled ? 'is-scrolled' : ''}`} data-testid="public-header">
         <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* LEFT — original branded MENU emblem trigger */}
+          {/* LEFT — branded MENU emblem trigger */}
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
@@ -54,22 +111,12 @@ export const PublicHeader = () => {
             <Logo height={30} />
           </Link>
 
-          {/* RIGHT — phone + CTA + auth */}
+          {/* RIGHT — language · wallet · theme · auth (original logic) */}
           <div className="flex items-center gap-1.5 sm:gap-2">
-            <a href={LUMEN_CONTACTS.phoneHref} className="lpub-header__phone" data-testid="public-header-phone">
-              <Phone className="h-4 w-4" /><span className="hidden xl:inline">{LUMEN_CONTACTS.phone}</span>
-            </a>
-            <button
-              type="button"
-              onClick={() => openContact({ source: 'header', title: 'Замовити дзвінок' })}
-              className="lpub-header__cta hidden md:inline-flex"
-              data-testid="public-header-callback"
-            >
-              Замовити дзвінок
-            </button>
+            <LangSwitch />
             {isInvestor
-              ? <div className="hidden lg:block"><WalletConnectButton compact /></div>
-              : <div className="hidden lg:block"><PublicWalletButton compact /></div>}
+              ? <div className="hidden md:block"><WalletConnectButton compact /></div>
+              : <div className="hidden md:block"><PublicWalletButton compact /></div>}
             <ThemeToggle />
             {user ? (
               <Link to={user.role === 'admin' ? '/admin/dashboard' : '/investor/dashboard'} className="lumen-btn-primary h-9 px-4 text-sm font-medium" data-testid="public-header-cabinet">
