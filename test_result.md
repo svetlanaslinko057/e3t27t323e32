@@ -140,23 +140,24 @@ frontend:
 
   - task: "FAQ redesign — editorial numbered accordion on /contacts page"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/components/public/FaqList.jsx, frontend/src/components/public/public.css, frontend/src/pages/public/PublicContactsPage.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: |
             Replaced the shadcn Accordion FAQ on /contacts with a new editorial component
-            FaqList.jsx inspired by a reference design: slash numbering ("1/", "2/", ...),
-            large bold question (Space Grotesk), an animated "+" toggle that rotates 135deg
-            (into an x) when open, thin gold gradient divider lines, smooth height expand via
-            framer-motion. Uses LUMEN palette (deep green ink, gold #C9A961 accents on cream).
-            Styles added under .lpub-faq* in public.css. data-testids preserved: contacts-faq
-            (container), faq-trigger-{i} (each question button), faq-content-{i} (answer).
-            Only one FAQ item open at a time; clicking an open item closes it.
+            FaqList.jsx (slash numbering, large bold question, animated "+" toggle, gold lines).
+        - working: true
+          agent: "testing"
+          comment: |
+            100% pass (iteration_4.json). Verified slash numbering 1/..6/ in gold, large bold
+            deep-green questions, "+" rotates 135deg to "x" on open, thin gold gradient dividers,
+            single-open behavior, smooth framer-motion expand/collapse, cream bg rgb(251,249,244),
+            no console errors. Note: frontend needed a restart to pick up the new component file.
 
 metadata:
   created_by: "main_agent"
