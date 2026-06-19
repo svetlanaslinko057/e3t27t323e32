@@ -10,22 +10,6 @@ import { useContactModal } from '@/contexts/ContactModalContext';
 import { LUMEN_CONTACTS } from '@/components/public/publicNav';
 import PublicMenuOverlay from '@/components/public/PublicMenuOverlay';
 
-/* Rotating 8-point asterisk emblem (morphs visually when open). */
-function AsteriskMark({ open }) {
-  return (
-    <span className={`lpub-trigger__mark ${open ? 'is-open' : ''}`} aria-hidden>
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
-        <g stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-          <line x1="12" y1="3" x2="12" y2="21" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="5.6" y1="5.6" x2="18.4" y2="18.4" />
-          <line x1="18.4" y1="5.6" x2="5.6" y2="18.4" />
-        </g>
-      </svg>
-    </span>
-  );
-}
-
 /**
  * Unified public site header used by ALL public pages via PublicLayout.
  * Left: MENU trigger (opens overlay). Center: logo. Right: phone + CTA + auth.
@@ -48,16 +32,21 @@ export const PublicHeader = () => {
     <>
       <header className={`lpub-header ${scrolled ? 'is-scrolled' : ''}`} data-testid="public-header">
         <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* LEFT — menu trigger */}
+          {/* LEFT — original branded MENU emblem trigger */}
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
-            className="lpub-trigger group"
+            className="lumen-menu-emblem group"
             data-testid="public-menu-trigger"
             aria-label="Відкрити меню"
           >
-            <AsteriskMark open={menuOpen} />
-            <span className="lpub-trigger__label">Меню</span>
+            <span className="lumen-menu-emblem-mark" aria-hidden>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                <path d="M12 2c.6 3.7 1.7 4.8 5.4 5.4-3.7.6-4.8 1.7-5.4 5.4-.6-3.7-1.7-4.8-5.4-5.4C10.3 6.8 11.4 5.7 12 2Z" fill="currentColor"/>
+                <path d="M18 13.2c.35 2.1 1 2.75 3.1 3.1-2.1.35-2.75 1-3.1 3.1-.35-2.1-1-2.75-3.1-3.1 2.1-.35 2.75-1 3.1-3.1Z" fill="currentColor" opacity="0.7"/>
+              </svg>
+            </span>
+            <span className="hidden sm:inline lumen-menu-emblem-label">Меню</span>
           </button>
 
           {/* CENTER — logo */}

@@ -50,16 +50,25 @@ export const PublicMenuOverlay = ({ open, onClose }) => {
             initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
             transition={{ duration: 0.52, ease: [0.76, 0, 0.24, 1] }}
           >
-            <div className="flex items-center justify-between">
-              <button type="button" onClick={onClose} className="lumen-close-btn" data-testid="public-menu-close">
-                <X className="w-4 h-4" /> Закрити
+            <div className="lumen-menu-top">
+              <button type="button" onClick={onClose} className="lumen-close-btn group" data-testid="public-menu-close">
+                <span className="lumen-close-icon"><X className="w-4 h-4" /></span>
+                <span className="lumen-close-word">Закрити</span>
               </button>
               <img
                 src={`${process.env.PUBLIC_URL || ''}/branding/lumen-light.v4.png`}
-                alt="LUMEN" draggable={false} style={{ height: 22, width: 'auto' }}
+                alt="LUMEN" draggable={false} style={{ height: 24, width: 'auto' }}
                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
             </div>
+
+            <motion.p
+              className="lumen-menu-eyebrow"
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.22, duration: 0.5 }}
+            >
+              Навігація
+            </motion.p>
 
             <motion.nav variants={listV} initial="hidden" animate="show" className="lumen-menu-nav">
               {PUBLIC_NAV.map((it, i) => {
