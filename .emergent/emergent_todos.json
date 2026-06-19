@@ -1,30 +1,30 @@
 [
   {
-    "content": "Migrate GitHub repo content into /app (preserve protected .env files)",
+    "content": "Migrate & deploy LUMEN repo (done)",
     "status": "completed"
   },
   {
-    "content": "Configure backend .env (DB_NAME=lumen_database, LUMEN flags, EMERGENT_LLM_KEY)",
+    "content": "Study calculator logic: basic (PublicCalculatorPage) vs advanced hidden (LandingPage)",
     "status": "completed"
   },
   {
-    "content": "Install backend Python dependencies (filtered to avoid conflicts)",
+    "content": "Extract advanced calculator into reusable publicly-styled AssetYieldCalculator component",
     "status": "completed"
   },
   {
-    "content": "Install frontend dependencies (React 19) via yarn",
+    "content": "Replace basic calculator with advanced one on /calculator page + explanatory blocks",
     "status": "completed"
   },
   {
-    "content": "Restart services and verify clean startup (logs, healthz/readyz)",
+    "content": "Remove dead duplicate calculator code from LandingPage.js",
     "status": "completed"
   },
   {
-    "content": "Seed admin/test users + verify key API endpoints + landing page renders",
-    "status": "completed"
+    "content": "Test /calculator advanced calculator end-to-end via testing agent",
+    "status": "in_progress"
   },
   {
-    "content": "Audit summary + provide preview URL to user",
-    "status": "completed"
+    "content": "Fix any issues found + finalize",
+    "status": "pending"
   }
 ]

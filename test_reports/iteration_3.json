@@ -1,0 +1,32 @@
+{
+  "summary": "Completed frontend testing of the advanced calculator on /calculator page. All features working correctly: asset selection, amount input/slider, validation, projections with detailed metrics (pool share %, net profit, IRR, cash flow breakdown, 3 scenarios), and CTA button. OLD basic calculator UI (term slider, preset chips) successfully removed.",
+  "backend_issues": {},
+  "frontend_issues": {},
+  "passed_tests": [
+    "Page loads correctly at /calculator with lazy loading (Suspense)",
+    "Asset selector [data-testid=calc-asset] opens popover and lists 3 open assets from API",
+    "Selecting different assets updates asset info panel (category, location, horizon, IRR, pool size, min ticket)",
+    "Contribution input [data-testid=calc-amount] updates projection panel with all metrics",
+    "Slider [data-testid=calculator-invest-amount-input] syncs with input field",
+    "Projection panel [data-testid=calc-projection] displays: pool share %, monthly rental cash flow, appreciation, gross profit, tax (19.5%), net profit, effective IRR, total at exit",
+    "Three scenario pills displayed: Conservative (IRR -20%), Base, Optimistic (IRR +15%)",
+    "Validation: entering amount below minimum ticket shows red error message 'Мінімальна частка цього активу — ...'",
+    "Validation: projection panel shows prompt 'Вкажіть коректну суму внеску, щоб побачити прогноз' instead of numbers when amount is invalid",
+    "CTA button [data-testid=calculator-cta] present, enabled, and navigates to /objects/{assetId}",
+    "OLD basic calculator UI (term slider '6 міс.'..'60 міс.' and preset chips 'Збалансований/Комерція/Зростання') NOT present on /calculator page"
+  ],
+  "test_report_links": [
+    ".screenshots/calculator-page-load.png",
+    ".screenshots/calculator-asset-selected.png",
+    ".screenshots/calculator-amount-updated.png",
+    ".screenshots/calculator-validation-error.png",
+    ".screenshots/calculator-final.png"
+  ],
+  "action_item_for_main_agent": "",
+  "updated_files": [],
+  "success_percentage": {
+    "frontend": "100%"
+  },
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false
+}

@@ -101,3 +101,64 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: |
+  Deploy the existing LUMEN RWA platform (cloned from GitHub) and continue prior work.
+  Latest task: the public "Калькулятор" (/calculator) page showed only a BASIC version
+  (amount + term sliders + preset yield). There was a more advanced GLOBAL calculator
+  hidden (dead code) in LandingPage.js — it lets the user SELECT a real asset/object,
+  shows pool share %, rental cash flow, appreciation, gross/net profit, tax, effective
+  IRR, and 3 scenarios. Requirement: delete the basic version and place ONLY the full
+  advanced functional calculator on the /calculator page (in blocks).
+
+frontend:
+  - task: "Advanced asset-based yield calculator on /calculator page"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/public/AssetYieldCalculator.jsx, frontend/src/pages/public/PublicCalculatorPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: |
+            Extracted the advanced calculator (computeProjection model + AssetSelect popover)
+            from dead code in LandingPage.js into a new reusable, publicly-styled component
+            AssetYieldCalculator.jsx. Removed the basic version from PublicCalculatorPage.jsx
+            and now render the advanced calculator + explanatory 'how income is calculated'
+            blocks + CTA. Calculator fetches GET /api/assets?status=open (3 open assets seeded),
+            falls back to FALLBACK_ASSETS on error. data-testids: calc-asset (asset select),
+            calc-amount (USD input), calculator-invest-amount-input (slider), calc-projection
+            (result panel), calculator-result, calculator-cta. Compiles clean (no JS errors).
+            Screenshot rendered hero correctly; needs interaction testing to confirm projection
+            updates on asset change + amount change + validation messages (min ticket / pool cap).
+
+metadata:
+  created_by: "main_agent"
+  version: "1.1"
+  test_sequence: 1
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Advanced asset-based yield calculator on /calculator page"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+    - agent: "main"
+      message: |
+        Please test ONLY the /calculator public page (no login needed). Verify:
+        1. Page loads (it is lazy-loaded; allow a brief 'Завантаження…' Suspense flash).
+        2. Asset selector [data-testid=calc-asset] opens and lists open assets; selecting a
+           different asset updates the asset-info rows (category, location, horizon, IRR,
+           pool size, min ticket) and the projection panel [data-testid=calc-projection].
+        3. Changing the contribution via the number input [data-testid=calc-amount] and the
+           slider [data-testid=calculator-invest-amount-input] updates the projection numbers
+           (pool share %, net profit, effective IRR, payout breakdown, 3 scenarios).
+        4. Validation: entering an amount below the asset min ticket shows a red error and
+           the projection hides; a valid amount shows the projection again.
+        5. CTA [data-testid=calculator-cta] is present and links to the asset/assets page.
+        Do NOT test drag-and-drop, camera, or voice. Frontend-only test.
