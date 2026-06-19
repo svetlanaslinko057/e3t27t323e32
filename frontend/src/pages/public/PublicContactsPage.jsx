@@ -5,10 +5,8 @@ import { lumen } from '@/lib/lumenApi';
 import PageHero from '@/components/public/PageHero';
 import Reveal from '@/components/public/Reveal';
 import SectionLabel from '@/components/public/SectionLabel';
+import FaqList from '@/components/public/FaqList';
 import { LUMEN_CONTACTS } from '@/components/public/publicNav';
-import {
-  Accordion, AccordionItem, AccordionTrigger, AccordionContent,
-} from '@/components/ui/accordion';
 
 const CHANNELS = [
   { id: 'phone', icon: Phone, label: 'Телефон', value: LUMEN_CONTACTS.phone, copy: '+380443334455', href: LUMEN_CONTACTS.phoneHref, sub: 'Щодня · 9:00–18:00' },
@@ -126,18 +124,13 @@ export default function PublicContactsPage() {
 
       {/* FAQ */}
       <section className="lpub-section lpub-section--cream pt-0">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <Reveal><SectionLabel>Питання й відповіді</SectionLabel></Reveal>
           <Reveal delay={0.05}><h2 className="lpub-h2 mt-4">Поширені запитання інвесторів</h2></Reveal>
           <Reveal delay={0.1}>
-            <Accordion type="single" collapsible className="mt-8" data-testid="contacts-faq">
-              {FAQ.map((f, i) => (
-                <AccordionItem key={i} value={`q${i}`} className="border-b border-border">
-                  <AccordionTrigger className="text-left text-base font-semibold hover:no-underline" data-testid={`faq-trigger-${i}`}>{f.q}</AccordionTrigger>
-                  <AccordionContent className="text-sm leading-relaxed text-token-muted">{f.a}</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            <div className="mt-10">
+              <FaqList items={FAQ.map((f) => ({ q: f.q, a: f.a }))} testId="contacts-faq" />
+            </div>
           </Reveal>
         </div>
       </section>

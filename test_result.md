@@ -138,15 +138,35 @@ frontend:
             and hides projection; CTA navigates to /objects/{id}; OLD basic calculator UI fully
             removed. No issues found.
 
+  - task: "FAQ redesign — editorial numbered accordion on /contacts page"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/public/FaqList.jsx, frontend/src/components/public/public.css, frontend/src/pages/public/PublicContactsPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: |
+            Replaced the shadcn Accordion FAQ on /contacts with a new editorial component
+            FaqList.jsx inspired by a reference design: slash numbering ("1/", "2/", ...),
+            large bold question (Space Grotesk), an animated "+" toggle that rotates 135deg
+            (into an x) when open, thin gold gradient divider lines, smooth height expand via
+            framer-motion. Uses LUMEN palette (deep green ink, gold #C9A961 accents on cream).
+            Styles added under .lpub-faq* in public.css. data-testids preserved: contacts-faq
+            (container), faq-trigger-{i} (each question button), faq-content-{i} (answer).
+            Only one FAQ item open at a time; clicking an open item closes it.
+
 metadata:
   created_by: "main_agent"
-  version: "1.1"
-  test_sequence: 1
+  version: "1.2"
+  test_sequence: 2
   run_ui: true
 
 test_plan:
   current_focus:
-    - "Advanced asset-based yield calculator on /calculator page"
+    - "FAQ redesign — editorial numbered accordion on /contacts page"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -154,15 +174,14 @@ test_plan:
 agent_communication:
     - agent: "main"
       message: |
-        Please test ONLY the /calculator public page (no login needed). Verify:
-        1. Page loads (it is lazy-loaded; allow a brief 'Завантаження…' Suspense flash).
-        2. Asset selector [data-testid=calc-asset] opens and lists open assets; selecting a
-           different asset updates the asset-info rows (category, location, horizon, IRR,
-           pool size, min ticket) and the projection panel [data-testid=calc-projection].
-        3. Changing the contribution via the number input [data-testid=calc-amount] and the
-           slider [data-testid=calculator-invest-amount-input] updates the projection numbers
-           (pool share %, net profit, effective IRR, payout breakdown, 3 scenarios).
-        4. Validation: entering an amount below the asset min ticket shows a red error and
-           the projection hides; a valid amount shows the projection again.
-        5. CTA [data-testid=calculator-cta] is present and links to the asset/assets page.
+        Test ONLY the FAQ on the /contacts public page (no login needed). The page is
+        lazy-loaded (brief 'Завантаження…' Suspense flash is normal). Verify:
+        1. The FAQ section [data-testid=contacts-faq] renders 6 questions, each prefixed with
+           slash numbering "1/", "2/", … "6/", with a "+" icon on the right and a thin divider
+           line under each row.
+        2. Clicking a question [data-testid=faq-trigger-{i}] expands its answer
+           [data-testid=faq-content-{i}] with a smooth animation and rotates the "+" into an
+           "x" (135deg). Clicking it again collapses it.
+        3. Opening a different question closes the previously open one (single-open behavior).
+        4. No console errors; styling uses green/gold LUMEN palette on cream background.
         Do NOT test drag-and-drop, camera, or voice. Frontend-only test.

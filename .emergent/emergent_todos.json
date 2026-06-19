@@ -1,30 +1,26 @@
 [
   {
-    "content": "Migrate & deploy LUMEN repo (done)",
+    "content": "Study existing FAQ implementations + reference design",
     "status": "completed"
   },
   {
-    "content": "Study calculator logic: basic (PublicCalculatorPage) vs advanced hidden (LandingPage)",
+    "content": "Build reusable editorial FaqList component (slash numbering, + toggle, gold lines) in LUMEN palette",
     "status": "completed"
   },
   {
-    "content": "Extract advanced calculator into reusable publicly-styled AssetYieldCalculator component",
+    "content": "Add .lpub-faq styles to public.css",
     "status": "completed"
   },
   {
-    "content": "Replace basic calculator with advanced one on /calculator page + explanatory blocks",
+    "content": "Wire FaqList into /contacts (replace shadcn Accordion)",
     "status": "completed"
   },
   {
-    "content": "Remove dead duplicate calculator code from LandingPage.js",
-    "status": "completed"
+    "content": "Test FAQ redesign end-to-end via testing agent",
+    "status": "in_progress"
   },
   {
-    "content": "Test /calculator advanced calculator end-to-end via testing agent",
-    "status": "completed"
-  },
-  {
-    "content": "Fix any issues found + finalize",
-    "status": "completed"
+    "content": "Fix any issues + finalize",
+    "status": "pending"
   }
 ]

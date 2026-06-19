@@ -318,3 +318,48 @@
 @media (min-width: 640px) { .lpub-journey { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1024px) { .lpub-journey { grid-template-columns: repeat(4, 1fr); } }
 .lpub-journey .journey-card { width: auto; max-width: none; padding: 1.5rem 1.5rem 1.35rem; }
+
+/* ===========================================================================
+   FAQ — editorial numbered accordion ("1/", big bold question, "+" toggle,
+   thin gold divider). LUMEN palette. Used by components/public/FaqList.jsx
+   =========================================================================== */
+.lpub-faq { --faq-ink: #143226; --faq-gold: #C9A961; --faq-champagne: #E5C98A; --faq-forest: #2E5D4F; border-top: 1px solid color-mix(in oklab, var(--border) 70%, var(--faq-gold) 30%); }
+.lpub-faq__row { position: relative; }
+.lpub-faq__q {
+  width: 100%; display: flex; align-items: center; gap: 1.25rem; text-align: left;
+  background: none; border: 0; cursor: pointer;
+  padding: clamp(1.4rem, 2.6vw, 2.1rem) 0.25rem clamp(1.4rem, 2.6vw, 2.1rem) 0;
+  transition: padding-bottom .3s ease;
+}
+.lpub-faq__num {
+  flex: 0 0 auto; font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(1rem, 1.8vw, 1.35rem); letter-spacing: -0.01em; color: var(--faq-gold);
+  line-height: 1.1; min-width: 1.6rem;
+}
+.lpub-faq__qtext {
+  flex: 1 1 auto; font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.1rem, 2.3vw, 1.6rem); font-weight: 700; letter-spacing: -0.015em;
+  line-height: 1.25; color: var(--faq-ink); transition: color .25s ease;
+}
+.lpub-faq__sign {
+  flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+  color: var(--faq-forest); transition: transform .35s cubic-bezier(0.25,0.1,0.25,1), color .25s ease;
+}
+.lpub-faq__sign.is-open { transform: rotate(135deg); color: var(--faq-gold); }
+.lpub-faq__q:hover .lpub-faq__qtext { color: var(--faq-forest); }
+.lpub-faq__q:hover .lpub-faq__sign { color: var(--faq-gold); }
+.lpub-faq__row.is-open .lpub-faq__qtext { color: var(--faq-forest); }
+.lpub-faq__row.is-open .lpub-faq__q { padding-bottom: 0.5rem; }
+.lpub-faq__a-wrap { overflow: hidden; }
+.lpub-faq__a {
+  margin: 0; padding: 0 2.75rem clamp(1.4rem, 2.4vw, 2rem) calc(1.6rem + 1.25rem);
+  font-size: 0.98rem; line-height: 1.7; color: var(--token-text-muted); max-width: 52rem;
+}
+.lpub-faq__line {
+  display: block; height: 1.5px; width: 100%;
+  background: linear-gradient(90deg, var(--faq-gold) 0%, color-mix(in oklab, var(--faq-gold) 18%, transparent) 55%, transparent 100%);
+}
+@media (max-width: 640px) {
+  .lpub-faq__q { gap: 0.85rem; }
+  .lpub-faq__a { padding-left: 1.6rem; padding-right: 0.5rem; }
+}
