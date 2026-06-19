@@ -1,42 +1,26 @@
 [
   {
-    "content": "Phase 1: Shared public shell — PublicLayout, PublicHeader, PublicMenuOverlay (route-based), FooterMega, primitives (PageHero, Reveal, SectionLabel, AssetCard), public.css",
+    "content": "Phase 1: Shared public shell (PublicLayout, header, overlay menu, mega footer, primitives, public.css)",
     "status": "completed"
   },
   {
-    "content": "Phase 1: Wire routes in App.js under PublicLayout (/ /how /assets /calculator /contacts /otc /app)",
+    "content": "Phase 1: Wire routes under PublicLayout",
     "status": "completed"
   },
   {
-    "content": "Phase 2: Build /how (Принцип роботи та безпека) page",
+    "content": "Phase 2: Build /how, /assets, /calculator, /contacts pages",
     "status": "completed"
   },
   {
-    "content": "Phase 2: Build /assets (каталог + раунди, live data) page",
+    "content": "Phase 2: Refactor landing into teasers; strip headers/footers from /otc /app",
     "status": "completed"
   },
   {
-    "content": "Phase 2: Build /calculator (Калькулятор дохідності) page",
+    "content": "Phase 3: Backend endpoints (contact + newsletter)",
     "status": "completed"
   },
   {
-    "content": "Phase 2: Build /contacts (Контакти + FAQ + форма) page",
+    "content": "Phase 3: End-to-end testing via testing agent — PASSED (0 issues)",
     "status": "completed"
-  },
-  {
-    "content": "Phase 2: Refactor LandingPage into selling teasers (remove own header/footer + deep sections)",
-    "status": "completed"
-  },
-  {
-    "content": "Phase 2: Strip internal headers/footers from /otc, /otc/:id, /app (use shared shell)",
-    "status": "completed"
-  },
-  {
-    "content": "Phase 3: Add minimal backend endpoints (POST /api/public/contact, /api/public/newsletter/subscribe)",
-    "status": "completed"
-  },
-  {
-    "content": "Phase 3: End-to-end testing via testing agent (menu nav, all pages, forms)",
-    "status": "in_progress"
   }
 ]
